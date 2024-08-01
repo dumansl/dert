@@ -1,10 +1,9 @@
 import 'package:dert/screens/login_screen/widget/basic_appbar.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'widget/login_content.dart';
-import 'widget/login_content_desktop.dart';
+import 'login_content.dart';
+import 'login_content_desktop.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,10 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: BasicAppBar(
         title: DertText.login,
         backgroundColor: Colors.transparent,
-        style: GoogleFonts.inter(
-          fontWeight: FontWeight.w600,
-          color: DertColor.text.darkpurple,
-        ),
+        style: DertTextStyle.inter.t20w600darkPurple,
         isLeadingVisible: false,
       ),
       body: Container(

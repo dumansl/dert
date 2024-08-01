@@ -7,7 +7,7 @@ import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'custom_button.dart';
+import 'widget/custom_button.dart';
 
 class LoginContent extends StatefulWidget {
   const LoginContent({
@@ -130,7 +130,7 @@ class _LoginContentState extends State<LoginContent> {
             suffixIcon: IconButton(
               icon: Icon(
                 _showPassword ? Icons.visibility : Icons.visibility_off,
-                color: Theme.of(context).colorScheme.surfaceContainer,
+                color: DertColor.button.purple,
               ),
               onPressed: () {
                 setState(() {
@@ -179,11 +179,7 @@ class _LoginContentState extends State<LoginContent> {
           ),
           SizedBox(height: ScreenUtil.getHeight(context) * 0.02),
           TextButton(
-            onPressed: () {
-              if (formKey.currentState!.validate()) {
-                formKey.currentState!.save();
-              }
-            },
+            onPressed: () {},
             child: Text(
               DertText.loginForgotPassword,
               style: DertTextStyle.roboto.t16w500white,
