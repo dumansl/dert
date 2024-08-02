@@ -1,6 +1,6 @@
 abstract class DertText {
   DertText._();
-  static String onboardButtonText = "'KABUL ET'";
+  static String onboardButtonText = "KABUL ET";
   static String onboardTitle = "Merhaba";
   static String onboardDescription =
       "Dert batağına dalmadan önce birkaç hatırlatma yapmak istiyorum. Platformda asla kabul edemeyeceğimiz birkaç davranış var.";

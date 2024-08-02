@@ -47,6 +47,27 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  // _navigateToNextScreen() async {
+  //   if (_sharedPreferencesService.isFirstTime()) {
+  //     await _sharedPreferencesService.setFirstTime(false);
+  //     if (mounted) {
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const OnboardingScreen(),
+  //         ),
+  //       );
+  //     }
+  //   } else {
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => const LoginScreen(),
+  //       ),
+  //     );
+  //   }
+  // }
+
   _navigateToNextScreen() async {
     if (_sharedPreferencesService.isFirstTime()) {
       await _sharedPreferencesService.setFirstTime(false);
@@ -58,6 +79,13 @@ class _SplashScreenState extends State<SplashScreen>
           ),
         );
       }
+    } else if (_sharedPreferencesService.isLoggedIn()) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomeScreen(),
+        ),
+      );
     } else {
       Navigator.pushReplacement(
         context,
