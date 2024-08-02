@@ -1,13 +1,14 @@
-import 'package:dert/screens/login_screen/widget/custom_input_text.dart';
+import 'package:dert/screens/login_screens/widget/custom_input_text.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'widget/custom_button.dart';
+import '../widget/custom_button.dart';
 
 class LoginContent extends StatefulWidget {
   const LoginContent({
@@ -179,7 +180,12 @@ class _LoginContentState extends State<LoginContent> {
           ),
           SizedBox(height: ScreenUtil.getHeight(context) * 0.02),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                createHorizontalPageRoute(const PasswordResetScreen()),
+              );
+            },
             child: Text(
               DertText.loginForgotPassword,
               style: DertTextStyle.roboto.t16w500white,
@@ -187,10 +193,9 @@ class _LoginContentState extends State<LoginContent> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const RegisterScreen(),
-                ),
+              Navigator.push(
+                context,
+                createHorizontalPageRoute(const RegisterScreen()),
               );
             },
             child: Text(

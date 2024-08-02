@@ -1,4 +1,4 @@
-import 'package:dert/screens/login_screen/widget/basic_appbar.dart';
+import 'package:dert/screens/login_screens/widget/basic_appbar.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         child: ResponsiveBuilder.isDesktop(context)
-            ? LoginContentDesktop(
-                emailController: _emailController,
-                passwordController: _passwordController,
-                onPressed: () => () {},
-              )
+            ? const LoginContentDesktop()
             : const LoginContent(),
       ),
     );

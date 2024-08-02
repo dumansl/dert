@@ -5,18 +5,12 @@ import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'widget/custom_button.dart';
-import 'widget/custom_input_text.dart';
+import '../widget/custom_button.dart';
+import '../widget/custom_input_text.dart';
 
 class LoginContentDesktop extends StatefulWidget {
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final Function() onPressed;
   const LoginContentDesktop({
     super.key,
-    required this.emailController,
-    required this.passwordController,
-    required this.onPressed,
   });
 
   @override

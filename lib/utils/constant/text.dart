@@ -16,4 +16,5 @@ abstract class DertText {
   static String loginRememberMe = "Beni Hatırla";
   static String loginForgotPassword = "Şifremi Unuttum";
   static String loginRegister = "Kayıt Ol !";
+  static String register = "KAYIT OL";
 }

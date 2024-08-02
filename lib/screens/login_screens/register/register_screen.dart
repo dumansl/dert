@@ -1,29 +1,20 @@
-import 'package:dert/screens/register_screen/widget/basic_appbar.dart';
+import 'package:dert/screens/login_screens/register/register_content.dart';
+import 'package:dert/screens/login_screens/widget/basic_appbar.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'register_content_desktop.dart';
 
-import 'widget/register_content.dart';
-
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
 
-  @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: BasicAppBar(
-        title: "KAYIT OL",
+        title: DertText.register,
         backgroundColor: Colors.transparent,
-        style: GoogleFonts.inter(
-          fontWeight: FontWeight.w600,
-          color: DertColor.text.darkpurple,
-        ),
+        style: DertTextStyle.inter.t20w600darkPurple,
         isLeadingVisible: true,
       ),
       body: Container(
@@ -31,11 +22,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         height: ScreenUtil.getHeight(context),
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/login_screen.webp"),
+            image: AssetImage(ImagePath.loginBackground),
             fit: BoxFit.cover,
           ),
         ),
-        child: const RegisterContent(),
+        child: ResponsiveBuilder.isDesktop(context)
+            ? const RegisterContentDesktop()
+            : const RegisterContent(),
       ),
     );
   }
