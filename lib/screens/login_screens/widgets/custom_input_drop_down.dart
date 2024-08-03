@@ -6,6 +6,7 @@ class CustomInputDropDownButton<T> extends StatefulWidget {
   final T? value;
   final ValueChanged<T?> onChanged;
   final String hintText;
+  final String? Function(T?)? validator;
 
   const CustomInputDropDownButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomInputDropDownButton<T> extends StatefulWidget {
     required this.onChanged,
     required this.hintText,
     this.value,
+    this.validator,
   });
 
   @override
@@ -47,6 +49,7 @@ class _CustomInputDropDownButtonState<T>
           hintText: widget.hintText,
         ),
         style: DertTextStyle.inter.t16w400purple,
+        validator: widget.validator,
       ),
     );
   }

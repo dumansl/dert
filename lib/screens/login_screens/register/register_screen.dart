@@ -1,5 +1,5 @@
 import 'package:dert/screens/login_screens/register/register_content.dart';
-import 'package:dert/screens/login_screens/widget/basic_appbar.dart';
+import 'package:dert/screens/login_screens/widgets/basic_appbar.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'register_content_desktop.dart';

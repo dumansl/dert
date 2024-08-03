@@ -1,4 +1,4 @@
-import 'package:dert/screens/login_screens/widget/custom_input_text.dart';
+import 'package:dert/screens/login_screens/widgets/custom_input_text.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
@@ -8,7 +8,7 @@ import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widget/custom_button.dart';
+import '../widgets/custom_button.dart';
 
 class LoginContent extends StatefulWidget {
   const LoginContent({

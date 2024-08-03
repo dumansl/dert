@@ -4,8 +4,8 @@ import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../model/onboard_model.dart';
-import 'widget/dot_indicator.dart';
-import 'widget/onboard_content.dart';
+import 'widgets/dot_indicator.dart';
+import 'widgets/onboard_content.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
