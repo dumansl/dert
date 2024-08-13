@@ -1,8 +1,11 @@
 import 'package:dert/screens/login_screens/register/widgets/email_password_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/name_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/profile_content.dart';
+import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterContent extends StatefulWidget {
   const RegisterContent({super.key});
@@ -19,7 +22,7 @@ class _RegisterContentState extends State<RegisterContent> {
   late String _password;
   late String _username;
   late String _gender;
-  late String _birthdate;
+  late int _birthdate;
 
   void _onNameEntered(String firstName, String lastName) {
     setState(() {
@@ -46,19 +49,41 @@ class _RegisterContentState extends State<RegisterContent> {
     );
   }
 
-  void _onProfileEntered(String username, String gender, String birthdate) {
+  void _onProfileEntered(String username, String gender, int birthdate) async {
     setState(() {
       _username = username;
       _gender = gender;
       _birthdate = birthdate;
     });
-    debugPrint('Kayıt Tamamlandı');
-    debugPrint('İsim: $_firstName $_lastName');
-    debugPrint('İsim: $_password');
-    debugPrint('E-posta: $_email');
-    debugPrint('Kullanıcı Adı: $_username');
-    debugPrint('Cinsiyet: $_gender');
-    debugPrint('Doğum Tarihi: $_birthdate');
+
+    try {
+      // Kullanıcı kaydını gerçekleştir
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final user = await authService.createUserWithEmailAndPassword(
+        name: _firstName,
+        lastName: _lastName,
+        email: _email,
+        password: _password,
+        username: _username,
+        gender: _gender,
+        birthdate: _birthdate,
+      );
+
+      if (user != null) {
+        // Kayıt başarılı, kullanıcıyı yönlendir
+        debugPrint('Kayıt Tamamlandı');
+        debugPrint('İsim: $_firstName $_lastName');
+        debugPrint('E-posta: $_email');
+        debugPrint('Kullanıcı Adı: $_username');
+        debugPrint('Cinsiyet: $_gender');
+        debugPrint('Doğum Tarihi: $_birthdate');
+        // Örneğin, anasayfaya yönlendirme yapabilirsiniz
+        // Navigator.pushReplacementNamed(context, '/home');
+      }
+    } catch (e) {
+      debugPrint("Kayıt sırasında bir hata oluştu: $e");
+      snackBar(context, "Kayıt sırasında bir hata oluştu: $e");
+    }
   }
 
   @override

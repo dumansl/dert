@@ -1,27 +1,38 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dert/services/firebase_service_provider.dart';
 import 'package:dert/services/handler_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthService extends ChangeNotifier {
   FirebaseAuth get _auth => FirebaseServiceProvider().auth;
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
   User? get currentUser => _auth.currentUser;
+  FirebaseStorage get storage => FirebaseServiceProvider().storage;
 
   // Kullanıcı bilgilerini kaydetme
   Future<void> registerUser({
-    required User user,
+    required User? user,
     required String name,
     required String lastName,
     required String email,
+    required String username,
+    required String gender,
+    required int birthdate,
   }) async {
     return handleErrors(
       operation: () async {
-        await _db.collection("users").doc(user.uid).set({
+        await _db.collection("users").doc(user!.uid).set({
           'firstName': name,
           'lastName': lastName,
           'email': email,
+          "username": username,
+          "gender": gender,
+          "birthdate": birthdate,
         });
       },
       onError: (e) {
@@ -61,10 +72,13 @@ class AuthService extends ChangeNotifier {
 
   // Kaydolma işlemi
   Future<User?> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
     required String name,
     required String lastName,
+    required String email,
+    required String password,
+    required String username,
+    required String gender,
+    required int birthdate,
   }) async {
     return handleErrors(
       operation: () async {
@@ -74,6 +88,17 @@ class AuthService extends ChangeNotifier {
           password: password,
         );
         User? user = userCredential.user;
+        if (user != null) {
+          await registerUser(
+            user: user,
+            name: name,
+            lastName: lastName,
+            email: email,
+            username: username,
+            gender: gender,
+            birthdate: birthdate,
+          );
+        }
         notifyListeners();
         return user;
       },
@@ -90,5 +115,34 @@ class AuthService extends ChangeNotifier {
         debugPrint("Kaydolma hatası: $e");
       },
     );
+  }
+
+  Future<String?> uploadProfileImage() async {
+    try {
+      // Kullanıcının galeriden bir resim seçmesini sağlar
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final storageRef =
+            storage.ref().child('profile_images/${currentUser!.uid}');
+        final uploadTask = storageRef.putFile(File(pickedFile.path));
+
+        final snapshot = await uploadTask.whenComplete(() {});
+        final downloadUrl = await snapshot.ref.getDownloadURL();
+
+        await _db.collection('users').doc(currentUser!.uid).update({
+          'profileImageUrl': downloadUrl,
+        });
+
+        return downloadUrl;
+      } else {
+        debugPrint("Resim seçilmedi.");
+        return null;
+      }
+    } catch (e) {
+      debugPrint("Profil fotoğrafı yüklenirken bir hata oluştu: $e");
+      return null;
+    }
   }
 }

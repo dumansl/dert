@@ -48,7 +48,7 @@ class _CustomInputDropDownButtonState<T>
           border: InputBorder.none,
           hintText: widget.hintText,
         ),
-        style: DertTextStyle.inter.t16w400purple,
+        style: DertTextStyle.poppins.t16w400purple,
         validator: widget.validator,
       ),
     );

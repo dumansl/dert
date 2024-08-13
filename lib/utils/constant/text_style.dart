@@ -9,6 +9,7 @@ class Typography {
   final TextStyle t16w500white;
   final TextStyle t20w600darkPurple;
   final TextStyle t20w500white;
+  final TextStyle t14w400white;
 
   Typography({required this.baseStyle})
       : t16w400purple = baseStyle.copyWith(
@@ -34,6 +35,11 @@ class Typography {
         t20w500white = baseStyle.copyWith(
           fontSize: 20,
           fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        t14w400white = baseStyle.copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
           color: Colors.white,
         );
 }

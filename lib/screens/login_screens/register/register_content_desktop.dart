@@ -19,7 +19,7 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
   late String _password;
   late String _username;
   late String _gender;
-  late String _birthdate;
+  late int _birthdate;
 
   void _onNameEntered(String firstName, String lastName) {
     setState(() {
@@ -46,7 +46,7 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
     );
   }
 
-  void _onProfileEntered(String username, String gender, String birthdate) {
+  void _onProfileEntered(String username, String gender, int birthdate) {
     setState(() {
       _username = username;
       _gender = gender;

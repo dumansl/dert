@@ -19,6 +19,9 @@ abstract class DertText {
   static String register = "KAYIT OL";
   static String registerName = "İsim";
   static String registerSurname = "Soyisim";
+  static String registerBirthdate = "Doğum Tarihi";
+  static String registerDescription =
+      "Kayıt sırasında isim ve soyadınızı alıyoruz, ancak bu bilgiler gizli tutulacaktır. Kimlik doğrulama ve güvenlik için kullanılır, üçüncü şahıslarla paylaşılmaz.";
   static String registerEmail = "E-posta";
   static String registerUserName = "Kullanıcı Adı";
   static String registerGender = "Cinsiyet";
