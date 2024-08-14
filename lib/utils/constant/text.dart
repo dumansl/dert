@@ -42,6 +42,7 @@ abstract class DertText {
   static String registerValidatorConfirmPassword =
       "Lütfen şifrenizi tekrar girin";
   static String registerConfirmPasswordError = "Parolalar uyuşmuyor";
+  static String registerValidatorBirthdate = "Lütfen Doğum Tarihini giriniz.";
   static String registerNext = "DEVAM ET";
   static String registerComplete = "TAMAMLA";
 }

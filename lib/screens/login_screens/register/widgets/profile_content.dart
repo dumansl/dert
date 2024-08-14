@@ -41,91 +41,99 @@ class _ProfileContentState extends State<ProfileContent> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          const RegisterDivider(),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _profileImageUrl != null
-                      ? NetworkImage(_profileImageUrl!)
-                      : null,
-                  child: _profileImageUrl == null
-                      ? IconButton(
-                          icon: const Icon(Icons.camera_alt),
-                          onPressed: () async {
-                            String? imageUrl = await Provider.of<AuthService>(
-                                    context,
-                                    listen: false)
-                                .uploadProfileImage();
-                            setState(() {
-                              _profileImageUrl = imageUrl;
-                            });
-                          },
-                        )
-                      : null,
-                ),
-                CustomInputText(
-                  hintText: DertText.registerUserName,
-                  onSaved: (newValue) {
-                    _username = newValue!;
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return DertText.registerValidatorUsername;
-                    }
-                    return null;
-                  },
-                ),
-                CustomInputDropDownButton<String>(
-                  items: [
-                    DropdownMenuItem(
-                        value: DertText.registerGenderFemale,
-                        child: Text(DertText.registerGenderFemale)),
-                    DropdownMenuItem(
-                        value: DertText.registerGenderMale,
-                        child: Text(DertText.registerGenderMale)),
-                    DropdownMenuItem(
-                      value: DertText.registerGenderOther,
-                      child: Text(
-                        DertText.registerGenderOther,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            const RegisterDivider(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.70,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _profileImageUrl != null
+                        ? NetworkImage(_profileImageUrl!)
+                        : null,
+                    child: _profileImageUrl == null
+                        ? IconButton(
+                            icon: const Icon(Icons.camera_alt),
+                            onPressed: () async {
+                              String? imageUrl = await Provider.of<AuthService>(
+                                      context,
+                                      listen: false)
+                                  .uploadProfileImage();
+                              setState(() {
+                                _profileImageUrl = imageUrl;
+                              });
+                            },
+                          )
+                        : null,
+                  ),
+                  CustomInputText(
+                    hintText: DertText.registerUserName,
+                    onSaved: (newValue) {
+                      _username = newValue!;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return DertText.registerValidatorUsername;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomInputDropDownButton<String>(
+                    items: [
+                      DropdownMenuItem(
+                          value: DertText.registerGenderFemale,
+                          child: Text(DertText.registerGenderFemale)),
+                      DropdownMenuItem(
+                          value: DertText.registerGenderMale,
+                          child: Text(DertText.registerGenderMale)),
+                      DropdownMenuItem(
+                        value: DertText.registerGenderOther,
+                        child: Text(
+                          DertText.registerGenderOther,
+                        ),
                       ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    _gender = value!;
-                  },
-                  hintText: DertText.registerGender,
-                  validator: (value) {
-                    if (value == null) {
-                      return DertText.registerValidatorGender;
-                    }
-                    return null;
-                  },
-                ),
-                CustomInputDatePicker(
-                  onPressed: () => _selectBirthdate(context),
-                  birthdate: _birthdate,
-                ),
-                CustomLoginButton(
-                  text: DertText.registerComplete,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      widget.onProfileEntered(_username, _gender, _birthdate);
-                    }
-                  },
-                ),
-              ],
+                    ],
+                    onChanged: (value) {
+                      _gender = value!;
+                    },
+                    hintText: DertText.registerGender,
+                    validator: (value) {
+                      if (value == null) {
+                        return DertText.registerValidatorGender;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomInputDatePicker(
+                    onPressed: () => _selectBirthdate(context),
+                    birthdate: _birthdate,
+                    validator: (value) {
+                      if (value == null) {
+                        return DertText.registerValidatorBirthdate;
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomLoginButton(
+                    text: DertText.registerComplete,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        widget.onProfileEntered(_username, _gender, _birthdate);
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

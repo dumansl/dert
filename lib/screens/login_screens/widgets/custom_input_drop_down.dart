@@ -26,31 +26,21 @@ class _CustomInputDropDownButtonState<T>
     extends State<CustomInputDropDownButton<T>> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          )
-        ],
-      ),
-      child: DropdownButtonFormField<T>(
-        items: widget.items,
-        onChanged: widget.onChanged,
-        value: widget.value,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: widget.hintText,
+    return DropdownButtonFormField<T>(
+      items: widget.items,
+      onChanged: widget.onChanged,
+      value: widget.value,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide.none,
         ),
-        style: DertTextStyle.poppins.t16w400purple,
-        validator: widget.validator,
+        hintText: widget.hintText,
       ),
+      style: DertTextStyle.poppins.t16w400purple,
+      validator: widget.validator,
     );
   }
 }

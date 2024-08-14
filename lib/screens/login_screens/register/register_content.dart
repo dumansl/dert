@@ -24,6 +24,8 @@ class _RegisterContentState extends State<RegisterContent> {
   late String _gender;
   late int _birthdate;
 
+  int _currentPageIndex = 0;
+
   void _onNameEntered(String firstName, String lastName) {
     setState(() {
       _firstName = firstName;
@@ -57,7 +59,6 @@ class _RegisterContentState extends State<RegisterContent> {
     });
 
     try {
-      // Kullanıcı kaydını gerçekleştir
       final authService = Provider.of<AuthService>(context, listen: false);
       final user = await authService.createUserWithEmailAndPassword(
         name: _firstName,
@@ -70,14 +71,12 @@ class _RegisterContentState extends State<RegisterContent> {
       );
 
       if (user != null) {
-        // Kayıt başarılı, kullanıcıyı yönlendir
         debugPrint('Kayıt Tamamlandı');
         debugPrint('İsim: $_firstName $_lastName');
         debugPrint('E-posta: $_email');
         debugPrint('Kullanıcı Adı: $_username');
         debugPrint('Cinsiyet: $_gender');
         debugPrint('Doğum Tarihi: $_birthdate');
-        // Örneğin, anasayfaya yönlendirme yapabilirsiniz
         // Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
@@ -91,22 +90,24 @@ class _RegisterContentState extends State<RegisterContent> {
     return Column(
       children: [
         Expanded(
-          flex: 40,
-          child: Center(
-            child: Container(
-              width: ScreenUtil.getWidth(context) * 0.5,
-              height: ScreenUtil.getHeight(context) * 0.1,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ImagePath.logo),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-          ),
+          flex: _currentPageIndex == 2 ? 20 : 40,
+          child: _currentPageIndex != 2
+              ? Center(
+                  child: Container(
+                    width: ScreenUtil.getWidth(context) * 0.5,
+                    height: ScreenUtil.getHeight(context) * 0.1,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(ImagePath.logo),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
         ),
         Expanded(
-          flex: 60,
+          flex: _currentPageIndex == 2 ? 80 : 60,
           child: Container(
             padding: EdgeInsets.all(ScreenPadding.padding32px),
             width: ScreenUtil.getWidth(context),
@@ -119,6 +120,11 @@ class _RegisterContentState extends State<RegisterContent> {
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPageIndex = index;
+                });
+              },
               children: [
                 NameContent(onNameEntered: _onNameEntered),
                 EmailPasswordContent(
