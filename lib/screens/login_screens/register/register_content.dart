@@ -1,8 +1,10 @@
 import 'package:dert/screens/login_screens/register/widgets/email_password_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/name_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/profile_content.dart';
+import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ class _RegisterContentState extends State<RegisterContent> {
   late int _birthdate;
 
   int _currentPageIndex = 0;
+  bool _isLoading = false;
 
   void _onNameEntered(String firstName, String lastName) {
     setState(() {
@@ -56,6 +59,7 @@ class _RegisterContentState extends State<RegisterContent> {
       _username = username;
       _gender = gender;
       _birthdate = birthdate;
+      _isLoading = true;
     });
 
     try {
@@ -71,17 +75,19 @@ class _RegisterContentState extends State<RegisterContent> {
       );
 
       if (user != null) {
-        debugPrint('Kayıt Tamamlandı');
-        debugPrint('İsim: $_firstName $_lastName');
-        debugPrint('E-posta: $_email');
-        debugPrint('Kullanıcı Adı: $_username');
-        debugPrint('Cinsiyet: $_gender');
-        debugPrint('Doğum Tarihi: $_birthdate');
-        // Navigator.pushReplacementNamed(context, '/home');
+        Navigator.push(
+          context,
+          createHorizontalPageRoute(const LoginScreen()),
+        );
+        snackBar(context, "Başarıyla kayıt olundu. Lütfen giriş yapınız.",
+            bgColor: DertColor.state.success);
       }
     } catch (e) {
-      debugPrint("Kayıt sırasında bir hata oluştu: $e");
-      snackBar(context, "Kayıt sırasında bir hata oluştu: $e");
+      snackBar(context, "$e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -129,7 +135,10 @@ class _RegisterContentState extends State<RegisterContent> {
                 NameContent(onNameEntered: _onNameEntered),
                 EmailPasswordContent(
                     onEmailPasswordEntered: _onEmailPasswordEntered),
-                ProfileContent(onProfileEntered: _onProfileEntered),
+                ProfileContent(
+                  onProfileEntered: _onProfileEntered,
+                  isLoading: _isLoading,
+                ),
               ],
             ),
           ),

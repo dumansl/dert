@@ -1,8 +1,12 @@
+import 'package:dert/screens/login_screens/login/login_screen.dart';
 import 'package:dert/screens/login_screens/register/widgets/email_password_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/name_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/profile_content.dart';
+import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterContentDesktop extends StatefulWidget {
   const RegisterContentDesktop({super.key});
@@ -20,6 +24,8 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
   late String _username;
   late String _gender;
   late int _birthdate;
+
+  bool _isLoading = false;
 
   void _onNameEntered(String firstName, String lastName) {
     setState(() {
@@ -46,19 +52,39 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
     );
   }
 
-  void _onProfileEntered(String username, String gender, int birthdate) {
+  void _onProfileEntered(String username, String gender, int birthdate) async {
     setState(() {
       _username = username;
       _gender = gender;
       _birthdate = birthdate;
+      _isLoading = true;
     });
-    debugPrint('Kayıt Tamamlandı');
-    debugPrint('İsim: $_firstName $_lastName');
-    debugPrint('İsim: $_password');
-    debugPrint('E-posta: $_email');
-    debugPrint('Kullanıcı Adı: $_username');
-    debugPrint('Cinsiyet: $_gender');
-    debugPrint('Doğum Tarihi: $_birthdate');
+
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final user = await authService.createUserWithEmailAndPassword(
+        name: _firstName,
+        lastName: _lastName,
+        email: _email,
+        password: _password,
+        username: _username,
+        gender: _gender,
+        birthdate: _birthdate,
+      );
+
+      if (user != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        snackBar(context, "Başarıyla kayıt olundu. Lütfen giriş yapınız.",
+            bgColor: DertColor.state.success);
+      }
+    } catch (e) {
+      snackBar(context, "$e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -93,7 +119,10 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
                 NameContent(onNameEntered: _onNameEntered),
                 EmailPasswordContent(
                     onEmailPasswordEntered: _onEmailPasswordEntered),
-                ProfileContent(onProfileEntered: _onProfileEntered),
+                ProfileContent(
+                  onProfileEntered: _onProfileEntered,
+                  isLoading: _isLoading,
+                ),
               ],
             ),
           ),

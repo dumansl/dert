@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 class CustomLoginButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
-  const CustomLoginButton(
-      {super.key, required this.onPressed, required this.text});
+  final bool isLoading;
+  const CustomLoginButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +25,14 @@ class CustomLoginButton extends StatelessWidget {
             ScreenUtil.getWidth(context), ScreenUtil.getHeight(context) * 0.07),
       ),
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: DertTextStyle.roboto.t20w500white,
-      ),
+      child: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Text(
+              text,
+              style: DertTextStyle.roboto.t20w500white,
+            ),
     );
   }
 }

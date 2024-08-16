@@ -4,6 +4,7 @@ import 'package:dert/screens/login_screens/widgets/custom_input_drop_down.dart';
 import 'package:dert/screens/login_screens/widgets/custom_input_text.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,10 @@ import '../../widgets/custom_input_date_picker.dart';
 
 class ProfileContent extends StatefulWidget {
   final Function(String, String, int) onProfileEntered;
+  final bool isLoading;
 
-  const ProfileContent({super.key, required this.onProfileEntered});
+  const ProfileContent(
+      {super.key, required this.onProfileEntered, required this.isLoading});
 
   @override
   State<ProfileContent> createState() => _ProfileContentState();
@@ -22,8 +25,9 @@ class _ProfileContentState extends State<ProfileContent> {
   final _formKey = GlobalKey<FormState>();
   String _username = '';
   String _gender = '';
-  String? _profileImageUrl;
   int _birthdate = 0;
+  String? _profileImageUrl;
+  bool _isUploadingImage = false;
 
   Future<void> _selectBirthdate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -35,6 +39,26 @@ class _ProfileContentState extends State<ProfileContent> {
     if (picked != null && picked != DateTime.now()) {
       setState(() {
         _birthdate = picked.millisecondsSinceEpoch ~/ 1000;
+      });
+    }
+  }
+
+  Future<void> _uploadProfileImage() async {
+    setState(() {
+      _isUploadingImage = true; // Yüklenme işaretini göster
+    });
+
+    try {
+      String? imageUrl = await Provider.of<AuthService>(context, listen: false)
+          .uploadProfileImage();
+      setState(() {
+        _profileImageUrl = imageUrl;
+      });
+    } catch (e) {
+      snackBar(context, "Resim yükleme sırasında bir hata oluştu: $e");
+    } finally {
+      setState(() {
+        _isUploadingImage = false; // Yüklenme işaretini gizle
       });
     }
   }
@@ -59,16 +83,11 @@ class _ProfileContentState extends State<ProfileContent> {
                         : null,
                     child: _profileImageUrl == null
                         ? IconButton(
-                            icon: const Icon(Icons.camera_alt),
-                            onPressed: () async {
-                              String? imageUrl = await Provider.of<AuthService>(
-                                      context,
-                                      listen: false)
-                                  .uploadProfileImage();
-                              setState(() {
-                                _profileImageUrl = imageUrl;
-                              });
-                            },
+                            icon: _isUploadingImage
+                                ? const Center(
+                                    child: CircularProgressIndicator())
+                                : const Icon(Icons.camera_alt),
+                            onPressed: _uploadProfileImage,
                           )
                         : null,
                   ),
@@ -121,6 +140,7 @@ class _ProfileContentState extends State<ProfileContent> {
                     },
                   ),
                   CustomLoginButton(
+                    isLoading: widget.isLoading,
                     text: DertText.registerComplete,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {

@@ -72,7 +72,7 @@ class _EmailPasswordContentState extends State<EmailPasswordContent> {
                           _showPassword
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          color: DertColor.button.purple,
                         ),
                         onPressed: () {
                           setState(() {
@@ -103,7 +103,7 @@ class _EmailPasswordContentState extends State<EmailPasswordContent> {
                           _showConfirmPassword
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Theme.of(context).colorScheme.surfaceContainer,
+                          color: DertColor.button.purple,
                         ),
                         onPressed: () {
                           setState(() {
