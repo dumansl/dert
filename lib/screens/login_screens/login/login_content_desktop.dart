@@ -1,3 +1,4 @@
+import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
@@ -30,6 +31,8 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
   bool _rememberMe = false;
   bool _showPassword = false;
 
+  UserModel? user;
+
   @override
   void initState() {
     super.initState();
@@ -40,10 +43,10 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
       BuildContext context, String email, String password) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
-      await authService.signInWithEmailAndPassword(email, password);
+      user = await authService.signInWithEmailAndPassword(email, password);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => HomeScreen(user: user),
         ),
       );
     } catch (error) {

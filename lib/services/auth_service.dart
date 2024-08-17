@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dert/model/user_model.dart';
 import 'package:dert/services/firebase_service_provider.dart';
 import 'package:dert/services/handler_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +15,6 @@ class AuthService extends ChangeNotifier {
   User? get currentUser => _auth.currentUser;
   FirebaseStorage get storage => FirebaseServiceProvider().storage;
 
-  // Kullanıcı bilgilerini kaydetme
   Future<void> registerUser({
     required User? user,
     required String name,
@@ -43,15 +43,32 @@ class AuthService extends ChangeNotifier {
   }
 
   // Giriş yapma işlemi
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<UserModel?> signInWithEmailAndPassword(
+      String email, String password) async {
     return handleErrors(
       operation: () async {
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+
+        User? user = userCredential.user;
         notifyListeners();
-        debugPrint(userCredential.user?.uid);
+        debugPrint(user?.uid);
+
+        if (user != null) {
+          DocumentSnapshot<Map<String, dynamic>> userDoc =
+              await _db.collection("users").doc(user.uid).get();
+
+          if (userDoc.exists) {
+            UserModel userModel = UserModel.fromMap(userDoc.data()!, user.uid);
+            return userModel;
+          } else {
+            throw Exception("Kullanıcı verisi bulunamadı.");
+          }
+        } else {
+          throw Exception("Kullanıcı bulunamadı.");
+        }
       },
       onError: (e) {
         if (e is FirebaseAuthException) {
@@ -66,11 +83,11 @@ class AuthService extends ChangeNotifier {
           }
         }
         debugPrint("Giriş hatası: $e");
+        return;
       },
     );
   }
 
-  // Kaydolma işlemi
   Future<User?> createUserWithEmailAndPassword({
     required String name,
     required String lastName,
@@ -119,7 +136,6 @@ class AuthService extends ChangeNotifier {
 
   Future<String?> uploadProfileImage() async {
     try {
-      // Kullanıcının galeriden bir resim seçmesini sağlar
       final pickedFile =
           await ImagePicker().pickImage(source: ImageSource.gallery);
 
