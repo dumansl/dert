@@ -43,7 +43,7 @@ class AuthService extends ChangeNotifier {
   }
 
   // Giriş yapma işlemi
-  Future<UserModel?> signInWithEmailAndPassword(
+  Future<UserModel> signInWithEmailAndPassword(
       String email, String password) async {
     return handleErrors(
       operation: () async {

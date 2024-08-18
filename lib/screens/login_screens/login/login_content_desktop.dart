@@ -31,7 +31,7 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
   bool _rememberMe = false;
   bool _showPassword = false;
 
-  UserModel? user;
+  late UserModel user;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
       user = await authService.signInWithEmailAndPassword(email, password);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => HomeScreen(user: user),
+          builder: (context) => DashboardScreen(user: user),
         ),
       );
     } catch (error) {

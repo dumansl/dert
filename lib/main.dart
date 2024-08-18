@@ -56,7 +56,7 @@ class DertMobileApp extends StatelessWidget {
       supportedLocales: [
         Locale('tr', 'TR'),
       ],
-      home: SplashScreen(),
+      home: DashboardScreen(),
     );
   }
 }

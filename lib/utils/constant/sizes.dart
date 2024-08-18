@@ -60,6 +60,7 @@ abstract class IconSize {
   IconSize._();
   static double size16px = 16;
   static double size25px = 25;
+  static double size28px = 28;
   static double size30px = 30;
   static double size35px = 35;
   static double size60px = 60;
