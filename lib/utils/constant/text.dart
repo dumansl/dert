@@ -45,4 +45,11 @@ abstract class DertText {
   static String registerValidatorBirthdate = "Lütfen Doğum Tarihini giriniz.";
   static String registerNext = "DEVAM ET";
   static String registerComplete = "TAMAMLA";
+  static String home = "Anasayfa";
+  static String myProfile = "Profilim";
+  static String myDert = "Dertlerim";
+  static String myDerman = "Dermanlarım";
+  static String myNotifications = "Bildirimlerim";
+  static String contact = "İletişim";
+  static String logOut = "Çıkış";
 }

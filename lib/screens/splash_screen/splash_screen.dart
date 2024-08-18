@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/connectivity_services.dart';
 import 'package:dert/services/shared_preferences_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -48,6 +50,9 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   _navigateToNextScreen() async {
+    var box = Hive.box<UserModel>('userBox');
+    UserModel? user = box.get('user');
+
     if (_sharedPreferencesService.isFirstTime()) {
       await _sharedPreferencesService.setFirstTime(false);
       if (mounted) {
@@ -62,7 +67,9 @@ class _SplashScreenState extends State<SplashScreen>
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const DashboardScreen(),
+          builder: (context) => DashboardScreen(
+            user: user,
+          ),
         ),
       );
     } else {

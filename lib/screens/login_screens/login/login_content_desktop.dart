@@ -69,7 +69,7 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             width: ScreenUtil.getWidth(context),
-            color: DertColor.chart.purple,
+            color: DertColor.card.purple,
             child: Center(
               child: SingleChildScrollView(
                 child: _loginContent(context),

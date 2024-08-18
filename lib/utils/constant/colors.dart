@@ -12,7 +12,7 @@ class BackgroundColor {
   final Color purple = const Color(0xff472C6C);
 }
 
-class ChartColor {
+class CardColor {
   final Color purple = const Color(0xff472C6C);
   final Color purpleWithOpacity = const Color.fromARGB(255, 111, 92, 135);
   final Color darkpurple = const Color(0xff1D0C2B);
@@ -48,7 +48,7 @@ abstract class DertColor {
   DertColor._();
   static StateColor state = StateColor();
   static BackgroundColor background = BackgroundColor();
-  static ChartColor chart = ChartColor();
+  static CardColor card = CardColor();
   static ButtonColor button = ButtonColor();
   static IconColor icon = IconColor();
   static FrameColor frame = FrameColor();

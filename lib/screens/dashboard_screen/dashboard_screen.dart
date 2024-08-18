@@ -8,7 +8,7 @@ class DashboardScreen extends StatefulWidget {
   final UserModel? user;
   const DashboardScreen({
     super.key,
-    this.user,
+    required this.user,
   });
 
   @override
@@ -17,13 +17,20 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _selectedIndex = 0;
+  late List<Widget> _pages;
 
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    const DrendScreen(),
-    const NotificationScreen(),
-    const ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      HomeScreen(
+        user: widget.user,
+      ),
+      const DrendScreen(),
+      const NotificationScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -33,6 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(ScreenUtil.getWidth(context).toString());
     return Scaffold(
       drawer: _drawer(context),
       appBar: _appBar(context),
@@ -108,7 +116,155 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Drawer _drawer(BuildContext context) {
     return Drawer(
-      backgroundColor: DertColor.background.darkpurple,
+      backgroundColor: DertColor.card.purple,
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: ScreenPadding.padding32px,
+            left: ScreenPadding.padding32px,
+            bottom: ScreenPadding.padding8px,
+            right: ScreenPadding.padding12px,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 65,
+                    ),
+                    SizedBox(height: ScreenPadding.padding16px),
+                    Text(
+                      "@${widget.user!.username}",
+                      style: DertTextStyle.roboto.t24w400white,
+                    ),
+                    SizedBox(height: ScreenPadding.padding32px),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _drawerOption(
+                      assetName: ImagePath.homeLogo,
+                      title: DertText.home,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DashboardScreen(user: widget.user),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.userLogo,
+                      title: DertText.myProfile,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.warningLogo,
+                      title: DertText.myDert,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DertListScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.checkLogo,
+                      title: DertText.myDerman,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DermanListScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.notificationLogo,
+                      title: DertText.myNotifications,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NotificationScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.phoneLogo,
+                      title: DertText.contact,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ContactScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    _drawerOption(
+                      assetName: ImagePath.logOutLogo,
+                      title: DertText.logOut,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _drawerOption({
+    required assetName,
+    required title,
+    onPressed,
+  }) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: onPressed,
+          child: Row(
+            children: [
+              Container(
+                height: 24,
+                width: 24,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(assetName),
+                  ),
+                ),
+              ),
+              SizedBox(width: ScreenPadding.padding8px),
+              Text(
+                title,
+                style: DertTextStyle.roboto.t24w400white,
+              )
+            ],
+          ),
+        ),
+        SizedBox(height: ScreenPadding.padding30px),
+      ],
     );
   }
 }

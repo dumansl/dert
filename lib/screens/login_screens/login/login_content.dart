@@ -7,6 +7,7 @@ import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_button.dart';
@@ -46,6 +47,23 @@ class _LoginContentState extends State<LoginContent> {
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       user = await authService.signInWithEmailAndPassword(email, password);
+
+      if (_rememberMe) {
+        var box = Hive.box<UserModel>('userBox');
+        box.put(
+          'user',
+          UserModel(
+            uid: user.uid,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            gender: user.gender,
+            birthdate: user.birthdate,
+          ),
+        );
+      }
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => DashboardScreen(user: user),
@@ -72,7 +90,7 @@ class _LoginContentState extends State<LoginContent> {
             padding: EdgeInsets.all(ScreenPadding.padding32px),
             width: ScreenUtil.getWidth(context),
             decoration: BoxDecoration(
-              color: DertColor.chart.purple,
+              color: DertColor.card.purple,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(SizeRadius.radius60px),
               ),

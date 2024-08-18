@@ -1,4 +1,5 @@
 import 'package:dert/firebase_options.dart';
+import 'package:dert/model/user_model.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/connectivity_services.dart';
 import 'package:dert/screens/screens.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,9 @@ final logger = Logger(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserModelAdapter());
+  await Hive.openBox<UserModel>('userBox');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -56,7 +61,7 @@ class DertMobileApp extends StatelessWidget {
       supportedLocales: [
         Locale('tr', 'TR'),
       ],
-      home: DashboardScreen(),
+      home: LoginScreen(),
     );
   }
 }

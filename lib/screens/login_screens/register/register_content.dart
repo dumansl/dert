@@ -118,7 +118,7 @@ class _RegisterContentState extends State<RegisterContent> {
             padding: EdgeInsets.all(ScreenPadding.padding32px),
             width: ScreenUtil.getWidth(context),
             decoration: BoxDecoration(
-              color: DertColor.chart.purple,
+              color: DertColor.card.purple,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(SizeRadius.radius60px),
               ),

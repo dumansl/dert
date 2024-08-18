@@ -104,7 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   vertical: ScreenPadding.padding5px,
                                 ),
                                 decoration: ShapeDecoration(
-                                  color: DertColor.chart.purple,
+                                  color: DertColor.card.purple,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                       SizeRadius.radius20px,

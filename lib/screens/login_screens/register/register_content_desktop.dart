@@ -111,7 +111,7 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             width: ScreenUtil.getWidth(context),
-            color: DertColor.chart.purple,
+            color: DertColor.card.purple,
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,

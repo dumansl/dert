@@ -19,8 +19,8 @@ class DotIndicator extends StatelessWidget {
       width: ScreenUtil.getWidth(context) * 0.02,
       decoration: BoxDecoration(
           color: isActive
-              ? DertColor.chart.purple
-              : DertColor.chart.purple.withOpacity(0.4),
+              ? DertColor.card.purple
+              : DertColor.card.purple.withOpacity(0.4),
           borderRadius: const BorderRadius.all(Radius.circular(12))),
     );
   }
