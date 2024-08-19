@@ -161,4 +161,17 @@ class AuthService extends ChangeNotifier {
       return null;
     }
   }
+
+  Future<void> signOut() async {
+    return handleErrors(
+      operation: () async {
+        await _auth.signOut();
+        notifyListeners();
+      },
+      onError: (e) {
+        debugPrint("Çıkış yapma hatası: $e");
+        throw Exception("Çıkış yapma işlemi başarısız oldu.");
+      },
+    );
+  }
 }

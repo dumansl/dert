@@ -5,6 +5,7 @@ import 'package:dert/services/shared_preferences_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_input_text.dart';
@@ -44,6 +45,23 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       user = await authService.signInWithEmailAndPassword(email, password);
+
+      if (_rememberMe) {
+        var box = Hive.box<UserModel>('userBox');
+        box.put(
+          'user',
+          UserModel(
+            uid: user.uid,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            gender: user.gender,
+            birthdate: user.birthdate,
+          ),
+        );
+      }
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => DashboardScreen(user: user),

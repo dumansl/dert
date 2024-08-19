@@ -1,8 +1,13 @@
 import 'package:dert/screens/screens.dart';
+import 'package:dert/services/auth_service.dart';
+import 'package:dert/services/shared_preferences_service.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dert/model/user_model.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   final UserModel? user;
@@ -36,6 +41,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final sharedPreferencesService = SharedPreferencesService();
+
+    bool? confirmLogout = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            DertText.logOutAlertDialog,
+            style: DertTextStyle.roboto.t18w700purple,
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text(DertText.logOutNo,
+                  style: DertTextStyle.roboto.t16w600darkPurple),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text(DertText.logOutYes,
+                  style: DertTextStyle.roboto.t16w600darkPurple),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmLogout == true) {
+      try {
+        await authService.signOut();
+        await sharedPreferencesService.clearLoggedInStatus();
+        await clearUserBox();
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } catch (error) {
+        snackBar(context, error.toString());
+      }
+    }
+  }
+
+  Future<void> clearUserBox() async {
+    var box = Hive.box<UserModel>('userBox');
+    await box.clear();
   }
 
   @override
@@ -103,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Padding(
           padding: EdgeInsets.only(right: ScreenPadding.padding8px),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () => logout(context),
             icon: Icon(
               Icons.exit_to_app,
               size: IconSize.size25px,
@@ -132,7 +190,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
+                      backgroundImage: widget.user?.profileImageUrl != null
+                          ? NetworkImage(widget.user!.profileImageUrl!)
+                          : widget.user!.gender == "Kadın"
+                              ? const AssetImage(ImagePath.userFemaleLogo)
+                                  as ImageProvider
+                              : const AssetImage(ImagePath.userMaleLogo)
+                                  as ImageProvider,
                       backgroundColor: Colors.white,
                       radius: 65,
                     ),
@@ -167,7 +232,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
+                            builder: (context) =>
+                                const ProfileScreen(showScaffold: true),
                           ),
                         );
                       },
@@ -203,7 +269,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const NotificationScreen(),
+                            builder: (context) =>
+                                const NotificationScreen(showScaffold: true),
                           ),
                         );
                       },
@@ -223,7 +290,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     _drawerOption(
                       assetName: ImagePath.logOutLogo,
                       title: DertText.logOut,
-                      onPressed: () {},
+                      onPressed: () => logout(context),
                     ),
                   ],
                 ),

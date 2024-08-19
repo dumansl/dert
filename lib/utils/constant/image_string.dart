@@ -14,4 +14,6 @@ abstract class ImagePath {
       "assets/images/logo/notification_logo.webp";
   static const String phoneLogo = "assets/images/logo/phone_logo.webp";
   static const String logOutLogo = "assets/images/logo/logout_logo.webp";
+  static const String userMaleLogo = "assets/images/logo/user_boy.webp";
+  static const String userFemaleLogo = "assets/images/logo/user_girl.webp";
 }

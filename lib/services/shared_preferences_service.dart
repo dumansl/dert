@@ -26,4 +26,8 @@ class SharedPreferencesService {
   Future<void> setLoggedIn(bool value) async {
     await _prefs.setBool('isLoggedIn', value);
   }
+
+  Future<void> clearLoggedInStatus() async {
+    await _prefs.remove('isLoggedIn');
+  }
 }

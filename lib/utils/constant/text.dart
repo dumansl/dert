@@ -52,4 +52,7 @@ abstract class DertText {
   static String myNotifications = "Bildirimlerim";
   static String contact = "İletişim";
   static String logOut = "Çıkış";
+  static String logOutAlertDialog = "Çıkış yapmak istediğinizden emin misiniz?";
+  static String logOutYes = "Evet";
+  static String logOutNo = "Hayır";
 }
