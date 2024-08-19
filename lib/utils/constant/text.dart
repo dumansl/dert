@@ -55,4 +55,9 @@ abstract class DertText {
   static String logOutAlertDialog = "Çıkış yapmak istediğinizden emin misiniz?";
   static String logOutYes = "Evet";
   static String logOutNo = "Hayır";
+  static String mainEmptyText =
+      "BURADA ÇIT ÇIKMIYOR !\nİNSANLARI TAKİP ET,\nANA SAYFAN DERTLENSİN ;)";
+  static String create = "Oluştur";
+  static String tellYourProblem = "Derdini anlat";
+  static String beTheCure = "Derman ol";
 }

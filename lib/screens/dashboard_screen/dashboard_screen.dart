@@ -1,6 +1,7 @@
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
+import 'package:dert/utils/constant/sizes.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -99,11 +100,116 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     debugPrint(ScreenUtil.getWidth(context).toString());
+    debugPrint(ScreenUtil.getHeight(context).toString());
     return Scaffold(
       drawer: _drawer(context),
       appBar: _appBar(context),
       bottomNavigationBar: bottomNavigationBar(),
       body: _pages[_selectedIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return _buildBottomDialog(context);
+            },
+          );
+        },
+        backgroundColor: DertColor.button.purple,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildBottomDialog(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(ScreenPadding.padding24px),
+      color: Colors.white,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(DertText.create,
+                  style: DertTextStyle.roboto.t20w500darkpurple),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: ScreenUtil.getWidth(context) * 0.06,
+                  height: ScreenUtil.getWidth(context) * 0.06,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImagePath.closeLogo),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: ScreenPadding.padding16px),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DertAddScreen(),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: ScreenUtil.getWidth(context) * 0.06,
+                  height: ScreenUtil.getWidth(context) * 0.06,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImagePath.warningLogo),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                SizedBox(width: ScreenPadding.padding20px),
+                Text(
+                  DertText.tellYourProblem,
+                  style: DertTextStyle.roboto.t16w500darkpurple,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: ScreenPadding.padding16px),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const DermanAddScreen(),
+                ),
+              );
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: ScreenUtil.getWidth(context) * 0.06,
+                  height: ScreenUtil.getWidth(context) * 0.06,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImagePath.checkLogo),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                SizedBox(width: ScreenPadding.padding20px),
+                Text(
+                  DertText.tellYourProblem,
+                  style: DertTextStyle.roboto.t16w500darkpurple,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

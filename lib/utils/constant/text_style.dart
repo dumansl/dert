@@ -5,20 +5,28 @@ import 'package:google_fonts/google_fonts.dart';
 class Typography {
   final TextStyle baseStyle;
   final TextStyle t24w400white;
+  final TextStyle t20w600darkPurple;
+  final TextStyle t20w500darkpurple;
+  final TextStyle t20w500white;
   final TextStyle t18w700purple;
+  final TextStyle t16w700darkpurple;
+  final TextStyle t16w600darkPurple;
+  final TextStyle t16w500darkpurple;
+  final TextStyle t16w500white;
   final TextStyle t16w400purple;
   final TextStyle t16w400lightPurple;
-  final TextStyle t16w500white;
-  final TextStyle t20w600darkPurple;
-  final TextStyle t20w500white;
   final TextStyle t14w400white;
-  final TextStyle t16w600darkPurple;
 
   Typography({required this.baseStyle})
       : t24w400white = baseStyle.copyWith(
           fontSize: 24,
           fontWeight: FontWeight.w400,
           color: Colors.white,
+        ),
+        t20w500darkpurple = baseStyle.copyWith(
+          fontSize: 20,
+          fontWeight: FontWeight.w500,
+          color: DertColor.text.darkpurple,
         ),
         t18w700purple = baseStyle.copyWith(
           fontSize: 18,
@@ -40,6 +48,11 @@ class Typography {
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
+        t16w500darkpurple = baseStyle.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: DertColor.text.darkpurple,
+        ),
         t20w600darkPurple = baseStyle.copyWith(
           fontSize: 20,
           fontWeight: FontWeight.w600,
@@ -53,6 +66,11 @@ class Typography {
         t16w600darkPurple = baseStyle.copyWith(
           fontSize: 16,
           fontWeight: FontWeight.w600,
+          color: DertColor.text.darkpurple,
+        ),
+        t16w700darkpurple = baseStyle.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
           color: DertColor.text.darkpurple,
         ),
         t14w400white = baseStyle.copyWith(
