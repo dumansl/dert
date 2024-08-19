@@ -1,5 +1,6 @@
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/login_screens/widgets/custom_input_text.dart';
+import 'package:dert/screens/login_screens/widgets/custom_logo.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
@@ -81,7 +82,10 @@ class _LoginContentState extends State<LoginContent> {
         Expanded(
           flex: 40,
           child: Center(
-            child: _loginLogo(context),
+            child: CustomLogo(
+              width: ScreenUtil.getWidth(context) * 0.5,
+              height: ScreenUtil.getHeight(context) * 0.1,
+            ),
           ),
         ),
         Expanded(

@@ -2,6 +2,7 @@ import 'package:dert/screens/login_screens/login/login_screen.dart';
 import 'package:dert/screens/login_screens/register/widgets/email_password_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/name_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/profile_content.dart';
+import 'package:dert/screens/login_screens/widgets/custom_logo.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';
@@ -94,15 +95,9 @@ class _RegisterContentDesktopState extends State<RegisterContentDesktop> {
         Expanded(
           flex: 60,
           child: Center(
-            child: Container(
+            child: CustomLogo(
               width: ScreenUtil.getWidth(context) * 0.6,
               height: ScreenUtil.getHeight(context) * 0.2,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ImagePath.logo),
-                  fit: BoxFit.contain,
-                ),
-              ),
             ),
           ),
         ),

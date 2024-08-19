@@ -60,4 +60,6 @@ abstract class DertText {
   static String create = "Oluştur";
   static String tellYourProblem = "Derdini anlat";
   static String beTheCure = "Derman ol";
+  static String passwordForgot = "ŞİFREMİ UNUTTUM";
+  static String passwordForgotSend = "GÖNDER";
 }

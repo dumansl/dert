@@ -1,6 +1,7 @@
 import 'package:dert/screens/login_screens/register/widgets/email_password_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/name_content.dart';
 import 'package:dert/screens/login_screens/register/widgets/profile_content.dart';
+import 'package:dert/screens/login_screens/widgets/custom_logo.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
@@ -99,15 +100,9 @@ class _RegisterContentState extends State<RegisterContent> {
           flex: _currentPageIndex == 2 ? 20 : 40,
           child: _currentPageIndex != 2
               ? Center(
-                  child: Container(
+                  child: CustomLogo(
                     width: ScreenUtil.getWidth(context) * 0.5,
                     height: ScreenUtil.getHeight(context) * 0.1,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(ImagePath.logo),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
                   ),
                 )
               : const SizedBox(),

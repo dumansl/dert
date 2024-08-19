@@ -1,4 +1,5 @@
 import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/login_screens/widgets/custom_logo.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
@@ -79,7 +80,10 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
         Expanded(
           flex: 60,
           child: Center(
-            child: _loginLogo(context),
+            child: CustomLogo(
+              width: ScreenUtil.getWidth(context) * 0.6,
+              height: ScreenUtil.getHeight(context) * 0.2,
+            ),
           ),
         ),
         Expanded(
