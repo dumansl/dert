@@ -42,7 +42,7 @@ class _PasswordResetContentState extends State<PasswordResetContent> {
             ),
             child: Center(
               child: SingleChildScrollView(
-                child: _loginContent(context),
+                child: _passwordResetContent(context),
               ),
             ),
           ),
@@ -51,7 +51,7 @@ class _PasswordResetContentState extends State<PasswordResetContent> {
     );
   }
 
-  Widget _loginContent(BuildContext context) {
+  Widget _passwordResetContent(BuildContext context) {
     return Form(
       key: formKey,
       child: Column(
