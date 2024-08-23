@@ -7,7 +7,7 @@ class DermanListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Dert List Screen"),
+        child: Text("Derman List Screen"),
       ),
     );
   }

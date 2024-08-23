@@ -208,17 +208,4 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
       ),
     );
   }
-
-  Widget _loginLogo(BuildContext context) {
-    return Container(
-      width: ScreenUtil.getWidth(context) * 0.6,
-      height: ScreenUtil.getHeight(context) * 0.2,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(ImagePath.logo),
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
 }

@@ -9,7 +9,9 @@ abstract class ImagePath {
   static const String homeLogo = "assets/images/logo/home_logo.webp";
   static const String userLogo = "assets/images/logo/user_logo.webp";
   static const String warningLogo = "assets/images/logo/warning_logo.webp";
+  static const String bipLogo = "assets/images/logo/bip_logo_1.webp";
   static const String checkLogo = "assets/images/logo/check_logo.webp";
+  static const String answerLogo = "assets/images/logo/conversation_logo.webp";
   static const String notificationLogo =
       "assets/images/logo/notification_logo.webp";
   static const String phoneLogo = "assets/images/logo/phone_logo.webp";
@@ -17,4 +19,7 @@ abstract class ImagePath {
   static const String userMaleLogo = "assets/images/logo/user_boy.webp";
   static const String userFemaleLogo = "assets/images/logo/user_girl.webp";
   static const String closeLogo = "assets/images/logo/close_logo.webp";
+  static const String drawing1 = "assets/images/drawing_1.webp";
+  static const String drawing2 = "assets/images/drawing_2.webp";
+  static const String drawing3 = "assets/images/drawing_3.webp";
 }

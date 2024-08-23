@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Typography {
   final TextStyle baseStyle;
+  final TextStyle t24w600darkpurple;
   final TextStyle t24w400white;
   final TextStyle t20w600darkPurple;
   final TextStyle t20w500darkpurple;
@@ -15,10 +16,18 @@ class Typography {
   final TextStyle t16w500white;
   final TextStyle t16w400purple;
   final TextStyle t16w400lightPurple;
+  final TextStyle t14w500darkpurple;
   final TextStyle t14w400white;
+  final TextStyle t12w500white;
+  final TextStyle t12w400white;
 
   Typography({required this.baseStyle})
-      : t24w400white = baseStyle.copyWith(
+      : t24w600darkpurple = baseStyle.copyWith(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: DertColor.text.darkpurple,
+        ),
+        t24w400white = baseStyle.copyWith(
           fontSize: 24,
           fontWeight: FontWeight.w400,
           color: Colors.white,
@@ -73,9 +82,24 @@ class Typography {
           fontWeight: FontWeight.w700,
           color: DertColor.text.darkpurple,
         ),
+        t14w500darkpurple = baseStyle.copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: DertColor.text.darkpurple,
+        ),
         t14w400white = baseStyle.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w400,
+          color: Colors.white,
+        ),
+        t12w400white = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+        ),
+        t12w500white = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
           color: Colors.white,
         );
 }

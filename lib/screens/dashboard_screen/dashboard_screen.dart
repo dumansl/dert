@@ -1,7 +1,6 @@
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
-import 'package:dert/utils/constant/sizes.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -351,7 +350,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const DertListScreen(),
+                            builder: (context) =>
+                                DertListScreen(user: widget.user),
                           ),
                         );
                       },

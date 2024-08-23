@@ -2,12 +2,8 @@ import 'package:dert/screens/login_screens/register/widgets/register_divider.dar
 import 'package:dert/screens/login_screens/widgets/custom_button.dart';
 import 'package:dert/screens/login_screens/widgets/custom_input_drop_down.dart';
 import 'package:dert/screens/login_screens/widgets/custom_input_text.dart';
-import 'package:dert/services/auth_service.dart';
 import 'package:dert/utils/constant/constants.dart';
-import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../widgets/custom_input_date_picker.dart';
 
 class ProfileContent extends StatefulWidget {
@@ -26,8 +22,8 @@ class _ProfileContentState extends State<ProfileContent> {
   String _username = '';
   String _gender = '';
   int _birthdate = 0;
-  String? _profileImageUrl;
-  bool _isUploadingImage = false;
+  // String? _profileImageUrl;
+  // bool _isUploadingImage = false;
 
   Future<void> _selectBirthdate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -43,25 +39,25 @@ class _ProfileContentState extends State<ProfileContent> {
     }
   }
 
-  Future<void> _uploadProfileImage() async {
-    setState(() {
-      _isUploadingImage = true; // Yüklenme işaretini göster
-    });
+  // Future<void> _uploadProfileImage() async {
+  //   setState(() {
+  //     _isUploadingImage = true; // Yüklenme işaretini göster
+  //   });
 
-    try {
-      String? imageUrl = await Provider.of<AuthService>(context, listen: false)
-          .uploadProfileImage();
-      setState(() {
-        _profileImageUrl = imageUrl;
-      });
-    } catch (e) {
-      snackBar(context, "Resim yükleme sırasında bir hata oluştu: $e");
-    } finally {
-      setState(() {
-        _isUploadingImage = false; // Yüklenme işaretini gizle
-      });
-    }
-  }
+  //   try {
+  //     String? imageUrl = await Provider.of<AuthService>(context, listen: false)
+  //         .uploadProfileImage();
+  //     setState(() {
+  //       _profileImageUrl = imageUrl;
+  //     });
+  //   } catch (e) {
+  //     snackBar(context, "Resim yükleme sırasında bir hata oluştu: $e");
+  //   } finally {
+  //     setState(() {
+  //       _isUploadingImage = false; // Yüklenme işaretini gizle
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -72,25 +68,25 @@ class _ProfileContentState extends State<ProfileContent> {
           children: [
             const RegisterDivider(),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.70,
+              height: MediaQuery.of(context).size.height * 0.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _profileImageUrl != null
-                        ? NetworkImage(_profileImageUrl!)
-                        : null,
-                    child: _profileImageUrl == null
-                        ? IconButton(
-                            icon: _isUploadingImage
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : const Icon(Icons.camera_alt),
-                            onPressed: _uploadProfileImage,
-                          )
-                        : null,
-                  ),
+                  // CircleAvatar(
+                  //   radius: 50,
+                  //   backgroundImage: _profileImageUrl != null
+                  //       ? NetworkImage(_profileImageUrl!)
+                  //       : null,
+                  //   child: _profileImageUrl == null
+                  //       ? IconButton(
+                  //           icon: _isUploadingImage
+                  //               ? const Center(
+                  //                   child: CircularProgressIndicator())
+                  //               : const Icon(Icons.camera_alt),
+                  //           onPressed: _uploadProfileImage,
+                  //         )
+                  //       : null,
+                  // ),
                   CustomInputText(
                     hintText: DertText.registerUserName,
                     onSaved: (newValue) {

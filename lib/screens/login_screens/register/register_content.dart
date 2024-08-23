@@ -26,8 +26,6 @@ class _RegisterContentState extends State<RegisterContent> {
   late String _username;
   late String _gender;
   late int _birthdate;
-
-  int _currentPageIndex = 0;
   bool _isLoading = false;
 
   void _onNameEntered(String firstName, String lastName) {
@@ -97,18 +95,15 @@ class _RegisterContentState extends State<RegisterContent> {
     return Column(
       children: [
         Expanded(
-          flex: _currentPageIndex == 2 ? 20 : 40,
-          child: _currentPageIndex != 2
-              ? Center(
-                  child: CustomLogo(
-                    width: ScreenUtil.getWidth(context) * 0.5,
-                    height: ScreenUtil.getHeight(context) * 0.1,
-                  ),
-                )
-              : const SizedBox(),
-        ),
+            flex: 40,
+            child: Center(
+              child: CustomLogo(
+                width: ScreenUtil.getWidth(context) * 0.5,
+                height: ScreenUtil.getHeight(context) * 0.1,
+              ),
+            )),
         Expanded(
-          flex: _currentPageIndex == 2 ? 80 : 60,
+          flex: 60,
           child: Container(
             padding: EdgeInsets.all(ScreenPadding.padding32px),
             width: ScreenUtil.getWidth(context),
@@ -121,11 +116,6 @@ class _RegisterContentState extends State<RegisterContent> {
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _currentPageIndex = index;
-                });
-              },
               children: [
                 NameContent(onNameEntered: _onNameEntered),
                 EmailPasswordContent(

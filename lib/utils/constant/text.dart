@@ -62,4 +62,12 @@ abstract class DertText {
   static String beTheCure = "Derman ol";
   static String passwordForgot = "ŞİFREMİ UNUTTUM";
   static String passwordForgotSend = "GÖNDER";
+  static String dert = "DERT";
+  static String usersEmptyDertTitle =
+      "Derdinin olmaması ne güzel 😒 Yine de dertleşmek istersen yukarı da ki ekleme butonunu kullanabilirsin.";
+  static String derman = "DERMAN";
+  static String usersEmptyDermanTitle =
+      "Allah ‘ım ne dertler var” demek istemez misin ? İnsanlara derman ver veya yüzünü gülümsetecek 😏 cevaplar gönder.";
+  static String dertListEmptyDertTitle =
+      "DERDİNİN OLMAMASİ NE GÜZEL 😒 YINE DE DERTLEŞMEK İSTERSEN YUKARI DA Kİ EKLEME BUTONUNU KULLANABİLİRSİN.";
 }

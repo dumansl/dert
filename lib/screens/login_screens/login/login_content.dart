@@ -110,19 +110,6 @@ class _LoginContentState extends State<LoginContent> {
     );
   }
 
-  Widget _loginLogo(BuildContext context) {
-    return Container(
-      width: ScreenUtil.getWidth(context) * 0.5,
-      height: ScreenUtil.getHeight(context) * 0.1,
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(ImagePath.logo),
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
-
   Widget _loginContent(BuildContext context) {
     return Form(
       key: formKey,

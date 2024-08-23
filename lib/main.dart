@@ -1,8 +1,7 @@
 import 'package:dert/firebase_options.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/services/auth_service.dart';
-import 'package:dert/services/connectivity_services.dart';
 import 'package:dert/screens/screens.dart';
+import 'package:dert/services/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +39,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ConnectivityService()),
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => DertService()),
       ],
       child: const DertMobileApp(),
     ),
