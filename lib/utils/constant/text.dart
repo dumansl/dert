@@ -59,9 +59,10 @@ abstract class DertText {
       "BURADA ÇIT ÇIKMIYOR !\nİNSANLARI TAKİP ET,\nANA SAYFAN DERTLENSİN ;)";
   static String create = "Oluştur";
   static String tellYourProblem = "Derdini anlat";
+  static String toBeDerman = "Derman ol";
   static String beTheCure = "Derman ol";
   static String passwordForgot = "ŞİFREMİ UNUTTUM";
-  static String passwordForgotSend = "GÖNDER";
+  static String send = "GÖNDER";
   static String dert = "DERT";
   static String usersEmptyDertTitle =
       "Derdinin olmaması ne güzel 😒 Yine de dertleşmek istersen yukarı da ki ekleme butonunu kullanabilirsin.";
@@ -70,4 +71,11 @@ abstract class DertText {
       "Allah ‘ım ne dertler var” demek istemez misin ? İnsanlara derman ver veya yüzünü gülümsetecek 😏 cevaplar gönder.";
   static String dertListEmptyDertTitle =
       "DERDİNİN OLMAMASİ NE GÜZEL 😒 YINE DE DERTLEŞMEK İSTERSEN YUKARI DA Kİ EKLEME BUTONUNU KULLANABİLİRSİN.";
+  static String shareDert = "DERDİNİ PAYLAŞ";
+  static String shareDertTitle = "DERDİNİZİ PAYLAŞIN";
+  static String dertSendApproval =
+      "Derdinizi göndermek istediğinize emin misiniz ?";
+  static String dertValidator = "Derdinizi giriniz.";
+  static String dertAddedSuccess = "Dert başarıyla eklendi!";
+  static String dertAddedError = "Dert eklenirken bir hata oluştu.";
 }

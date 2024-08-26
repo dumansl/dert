@@ -5,8 +5,9 @@ import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/custom_dert_card.dart';
+import '../widgets/dert_card.dart';
 
 class UsersScreen extends StatefulWidget {
   final UserModel? user;
@@ -17,40 +18,68 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
+  void _launchMusicUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final dertProvider = Provider.of<DertService>(context);
-
+    debugPrint(widget.user.toString());
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenPadding.padding4px,
         vertical: ScreenPadding.padding8px,
       ),
-      child: StreamBuilder<List<DertModel>>(
-        stream: dertProvider.streamDerts(widget.user!.uid),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final derts = snapshot.data ?? [];
-            if (derts.isEmpty) {
-              return _usersEmpty(context);
-            }
-            return ListView.builder(
-              // scrollDirection: Axis.horizontal,
-              itemCount: derts.length,
-              itemBuilder: (context, index) {
-                final dert = derts[index];
-                return Padding(
-                  padding: EdgeInsets.only(bottom: ScreenPadding.padding8px),
-                  child: CustomDertCard(dert: dert),
-                );
+      child: Column(
+        children: [
+          if (widget.user!.musicUrl != null &&
+              widget.user!.musicUrl!.isNotEmpty)
+            GestureDetector(
+              onTap: () {
+                _launchMusicUrl(widget.user!.musicUrl!);
               },
-            );
-          }
-        },
+              child: const Text(
+                'Müziğimi Dinle',
+                style: TextStyle(
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          Expanded(
+            child: StreamBuilder<List<DertModel>>(
+              stream: dertProvider.streamDerts(widget.user!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final derts = snapshot.data ?? [];
+                  if (derts.isEmpty) {
+                    return _usersEmpty(context);
+                  }
+                  return ListView.builder(
+                    // scrollDirection: Axis.horizontal,
+                    itemCount: derts.length,
+                    itemBuilder: (context, index) {
+                      final dert = derts[index];
+                      return Padding(
+                        padding:
+                            EdgeInsets.only(bottom: ScreenPadding.padding8px),
+                        child: DertCard(dert: dert),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -60,11 +89,15 @@ class _UsersScreenState extends State<UsersScreen> {
       children: [
         _optionTitleContent(
           context,
-          title: "DERT",
+          title: DertText.dert,
           iconPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DertAddScreen()),
+              MaterialPageRoute(
+                builder: (context) => DertAddScreen(
+                  user: widget.user,
+                ),
+              ),
             );
           },
           listPressed: () {

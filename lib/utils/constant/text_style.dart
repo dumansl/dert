@@ -10,6 +10,7 @@ class Typography {
   final TextStyle t20w500darkpurple;
   final TextStyle t20w500white;
   final TextStyle t18w700purple;
+  final TextStyle t18w700darkpurple;
   final TextStyle t16w700darkpurple;
   final TextStyle t16w600darkPurple;
   final TextStyle t16w500darkpurple;
@@ -41,6 +42,11 @@ class Typography {
           fontSize: 18,
           fontWeight: FontWeight.w700,
           color: DertColor.text.purple,
+        ),
+        t18w700darkpurple = baseStyle.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: DertColor.text.darkpurple,
         ),
         t16w400purple = baseStyle.copyWith(
           fontSize: 16,

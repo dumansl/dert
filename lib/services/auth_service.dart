@@ -162,6 +162,19 @@ class AuthService extends ChangeNotifier {
     }
   }
 
+  Future<void> resetPassword(String email) async {
+    return handleErrors(
+      operation: () async {
+        await _auth.sendPasswordResetEmail(email: email);
+        notifyListeners();
+      },
+      onError: (e) {
+        debugPrint("Şifre sıfırlama hatası: $e");
+        throw Exception("Şifre sıfırlama işlemi başarısız oldu.");
+      },
+    );
+  }
+
   Future<void> signOut() async {
     return handleErrors(
       operation: () async {

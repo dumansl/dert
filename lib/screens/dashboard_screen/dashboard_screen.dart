@@ -154,7 +154,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const DertAddScreen(),
+                  builder: (context) => DertAddScreen(
+                    user: widget.user,
+                  ),
                 ),
               );
             },
@@ -201,7 +203,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 SizedBox(width: ScreenPadding.padding20px),
                 Text(
-                  DertText.tellYourProblem,
+                  DertText.toBeDerman,
                   style: DertTextStyle.roboto.t16w500darkpurple,
                 ),
               ],

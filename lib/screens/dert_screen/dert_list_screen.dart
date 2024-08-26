@@ -1,13 +1,13 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/screens/dert_screen/widgets/dert_list_card.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dert_card.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/dert_appbar.dart';
+import '../dashboard_screen/widgets/dert_appbar.dart';
 
 class DertListScreen extends StatelessWidget {
   final UserModel? user;
@@ -49,7 +49,7 @@ class DertListScreen extends StatelessWidget {
                         return Padding(
                           padding:
                               EdgeInsets.only(bottom: ScreenPadding.padding8px),
-                          child: DertListCard(dert: dert),
+                          child: DertCard(dert: dert),
                         );
                       },
                     ),
@@ -79,7 +79,7 @@ class DertListScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const DermanAddScreen(),
+                builder: (context) => DertAddScreen(user: user),
               ),
             );
           },

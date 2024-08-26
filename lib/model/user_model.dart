@@ -28,6 +28,9 @@ class UserModel extends HiveObject {
   @HiveField(7)
   final int birthdate;
 
+  @HiveField(8)
+  final String? musicUrl;
+
   UserModel({
     required this.uid,
     required this.email,
@@ -37,6 +40,7 @@ class UserModel extends HiveObject {
     this.profileImageUrl,
     required this.gender,
     required this.birthdate,
+    this.musicUrl,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
@@ -49,7 +53,13 @@ class UserModel extends HiveObject {
       profileImageUrl: map['profileImageUrl'],
       gender: map['gender'] ?? '',
       birthdate: map['birthdate'] ?? 0,
+      musicUrl: map['musicUrl'] ?? "",
     );
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, username: $username, profileImageUrl: $profileImageUrl, gender: $gender, birthdate: $birthdate, musicUrl: $musicUrl)';
   }
 
   Map<String, dynamic> toMap() {
@@ -61,6 +71,7 @@ class UserModel extends HiveObject {
       'profileImageUrl': profileImageUrl,
       'gender': gender,
       'birthdate': birthdate,
+      'musicUrl': musicUrl,
     };
   }
 }

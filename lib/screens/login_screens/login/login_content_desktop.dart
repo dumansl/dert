@@ -59,6 +59,7 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
             username: user.username,
             gender: user.gender,
             birthdate: user.birthdate,
+            musicUrl: user.musicUrl,
           ),
         );
       }

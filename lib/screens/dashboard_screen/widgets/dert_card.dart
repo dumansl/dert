@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'answer_logo.dart';
 import 'bip_logo.dart';
 
-class CustomDertCard extends StatelessWidget {
+class DertCard extends StatelessWidget {
   final DertModel dert;
-  const CustomDertCard({
+  const DertCard({
     super.key,
     required this.dert,
   });
@@ -35,6 +35,7 @@ class CustomDertCard extends StatelessWidget {
             SizedBox(width: ScreenPadding.padding8px),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     dert.dert,
