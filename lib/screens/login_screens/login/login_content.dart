@@ -62,6 +62,7 @@ class _LoginContentState extends State<LoginContent> {
             gender: user.gender,
             birthdate: user.birthdate,
             musicUrl: user.musicUrl,
+            profileImageUrl: user.profileImageUrl,
           ),
         );
       }

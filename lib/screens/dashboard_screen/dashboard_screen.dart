@@ -28,12 +28,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _pages = [
-      HomeScreen(
-        user: widget.user,
-      ),
+      HomeScreen(user: widget.user),
       const DrendScreen(),
       const NotificationScreen(),
-      const ProfileScreen(),
+      ProfileScreen(user: widget.user),
     ];
   }
 
@@ -339,8 +337,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const ProfileScreen(showScaffold: true),
+                            builder: (context) => ProfileScreen(
+                                showScaffold: true, user: widget.user),
                           ),
                         );
                       },

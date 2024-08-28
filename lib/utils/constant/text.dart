@@ -78,4 +78,5 @@ abstract class DertText {
   static String dertValidator = "Derdinizi giriniz.";
   static String dertAddedSuccess = "Dert başarıyla eklendi!";
   static String dertAddedError = "Dert eklenirken bir hata oluştu.";
+  static String profile = "PROFİL";
 }

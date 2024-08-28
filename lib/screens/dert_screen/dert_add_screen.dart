@@ -27,7 +27,6 @@ class _DertAddScreenState extends State<DertAddScreen> {
 
   void _submitForm() {
     final newDert = DertModel(
-      userId: widget.user!.uid,
       content: _dert,
       isClosed: _isClosed,
       dermans: [],

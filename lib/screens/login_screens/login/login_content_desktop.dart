@@ -60,6 +60,7 @@ class _LoginContentDesktopState extends State<LoginContentDesktop> {
             gender: user.gender,
             birthdate: user.birthdate,
             musicUrl: user.musicUrl,
+            profileImageUrl: user.profileImageUrl,
           ),
         );
       }
