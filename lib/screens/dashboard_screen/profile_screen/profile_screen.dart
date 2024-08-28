@@ -66,7 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  createHorizontalPageRoute(const FollowersScreen()),
+                  createHorizontalPageRoute(
+                      FollowersScreen(user: widget.user!)),
                 );
               },
               child: RichText(
@@ -88,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  createHorizontalPageRoute(const FollowsScreen()),
+                  createHorizontalPageRoute(FollowsScreen(user: widget.user!)),
                 );
               },
               child: RichText(

@@ -22,4 +22,6 @@ abstract class ImagePath {
   static const String drawing1 = "assets/images/drawing_1.webp";
   static const String drawing2 = "assets/images/drawing_2.webp";
   static const String drawing3 = "assets/images/drawing_3.webp";
+  static const String unfollow = "assets/images/logo/delete_friend.webp";
+  static const String blockfollowers = "assets/images/logo/block.webp";
 }

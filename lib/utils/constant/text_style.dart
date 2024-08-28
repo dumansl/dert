@@ -24,7 +24,8 @@ class Typography {
   final TextStyle t14w400purple;
   final TextStyle t12w500white;
   final TextStyle t12w400white;
-
+  final TextStyle t10w400green;
+  final TextStyle t10w800grey;
   Typography({required this.baseStyle})
       : t24w600darkpurple = baseStyle.copyWith(
           fontSize: 24,
@@ -125,6 +126,16 @@ class Typography {
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: Colors.white,
+        ),
+        t10w800grey = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w800,
+          color: DertColor.text.grey,
+        ),
+        t10w400green = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: DertColor.text.green,
         );
 }
 

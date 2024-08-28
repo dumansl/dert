@@ -79,4 +79,10 @@ abstract class DertText {
   static String dertAddedSuccess = "Dert başarıyla eklendi!";
   static String dertAddedError = "Dert eklenirken bir hata oluştu.";
   static String profile = "PROFİL";
+  static String followers = "TAKİPÇİ";
+  static String follows = "TAKİP";
+  static String followsEmpty =
+      "“DAHA KİMSEYİ TAKİP ETMEMİŞSİN 🥲 ETKİLEŞİMİNİN ARTMASI İÇİN İNSANLARLA İLETİŞİMİ SIKI TUTMAYI UNUTMA 😉";
+  static String followersEmpty =
+      "ÜZÜLME ☺️ UYGULAMA DA VAKİT GEÇİRDİKÇE DAHA FAZLA ARKADAŞ EDİNECEKSİN, İYİ ŞANSLAR 🥰";
 }
