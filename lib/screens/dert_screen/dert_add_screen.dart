@@ -22,15 +22,17 @@ class _DertAddScreenState extends State<DertAddScreen> {
 
   final formKey = GlobalKey<FormState>();
   String _dert = "";
-  final bool _isConfirmed = false;
+  final bool _isClosed = false;
   final int _bip = 0;
 
   void _submitForm() {
     final newDert = DertModel(
-      dert: _dert,
-      isConfirmed: _isConfirmed,
-      derman: [],
-      bip: _bip,
+      userId: widget.user!.uid,
+      content: _dert,
+      isClosed: _isClosed,
+      dermans: [],
+      bips: _bip,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
     );
 
     Provider.of<DertService>(context, listen: false)

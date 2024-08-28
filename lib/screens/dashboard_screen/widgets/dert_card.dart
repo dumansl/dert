@@ -38,7 +38,7 @@ class DertCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    dert.dert,
+                    dert.content,
                     style: DertTextStyle.roboto.t12w400white,
                     textAlign: TextAlign.justify,
                   ),
@@ -80,7 +80,7 @@ class DertCard extends StatelessWidget {
             width: ScreenPadding.padding8px,
           ),
           Text(
-            "${dert.bip}",
+            "${dert.bips}",
             style: DertTextStyle.roboto.t12w500white,
           ),
         ],
@@ -103,7 +103,7 @@ class DertCard extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "${dert.derman.length}",
+            "${dert.dermans.length}",
             style: DertTextStyle.roboto.t12w500white,
           ),
           SizedBox(width: ScreenPadding.padding8px),
