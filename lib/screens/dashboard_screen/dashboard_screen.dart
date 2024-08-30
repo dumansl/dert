@@ -9,6 +9,8 @@ import 'package:dert/utils/constant/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
+import 'widgets/dert_circle_avatar.dart';
+
 class DashboardScreen extends StatefulWidget {
   final UserModel? user;
   const DashboardScreen({
@@ -295,15 +297,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      backgroundImage: widget.user?.profileImageUrl != null
-                          ? NetworkImage(widget.user!.profileImageUrl!)
-                          : widget.user!.gender == "Kadın"
-                              ? const AssetImage(ImagePath.userFemaleLogo)
-                                  as ImageProvider
-                              : const AssetImage(ImagePath.userMaleLogo)
-                                  as ImageProvider,
-                      backgroundColor: Colors.white,
+                    DertCircleAvatar(
+                      profileImageUrl: widget.user?.profileImageUrl,
+                      gender: widget.user!.gender,
                       radius: 65,
                     ),
                     SizedBox(height: ScreenPadding.padding16px),

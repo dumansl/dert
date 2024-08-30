@@ -10,17 +10,18 @@ class UserService extends ChangeNotifier {
   Future<List<FollowModel>> getFollowers(String userId) async {
     return handleErrors(
       operation: () async {
-        List<FollowModel> followers = [];
-        final snapshot = await _db
+        QuerySnapshot snapshot = await _db
             .collection('users')
             .doc(userId)
             .collection('followers')
             .get();
 
-        for (var doc in snapshot.docs) {
-          followers.add(FollowModel.fromMap(doc.data()));
-        }
+        List<FollowModel> followers = snapshot.docs.map((doc) {
+          return FollowModel.fromMap(
+              doc.id, doc.data() as Map<String, dynamic>);
+        }).toList();
         notifyListeners();
+
         return followers;
       },
       onError: (e) {
@@ -29,24 +30,90 @@ class UserService extends ChangeNotifier {
     );
   }
 
+  Future<void> addFollower(String userId, FollowModel follow) async {
+    return handleErrors(
+      operation: () async {
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('followers')
+            .add(follow.toMap());
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Takipçi ekleme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> removeFollower(String userId, String followId) async {
+    return handleErrors(
+      operation: () async {
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('followers')
+            .doc(followId)
+            .delete();
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Takipçi çıkarma hatası: $e");
+      },
+    );
+  }
+
   Future<List<FollowModel>> getFollows(String userId) async {
     return handleErrors(
       operation: () async {
-        List<FollowModel> follows = [];
-        final snapshot = await _db
+        QuerySnapshot snapshot = await _db
             .collection('users')
             .doc(userId)
             .collection('follows')
             .get();
 
-        for (var doc in snapshot.docs) {
-          follows.add(FollowModel.fromMap(doc.data()));
-        }
+        List<FollowModel> follows = snapshot.docs.map((doc) {
+          return FollowModel.fromMap(
+              doc.id, doc.data() as Map<String, dynamic>);
+        }).toList();
         notifyListeners();
         return follows;
       },
       onError: (e) {
         throw Exception("Takip ettiklerimi getirme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> followUser(String userId, FollowModel follow) async {
+    return handleErrors(
+      operation: () async {
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('follows')
+            .add(follow.toMap());
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Kullanıcıyı takip etme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> unfollowUser(String userId, String followId) async {
+    return handleErrors(
+      operation: () async {
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('follows')
+            .doc(followId)
+            .delete();
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Takipten çıkma hatası: $e");
       },
     );
   }

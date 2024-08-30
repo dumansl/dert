@@ -1,5 +1,6 @@
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dert_circle_avatar.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/horizontal_page_route.dart';
@@ -49,16 +50,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircleAvatar(
-          backgroundImage: widget.user?.profileImageUrl != null
-              ? NetworkImage(widget.user!.profileImageUrl!)
-              : widget.user!.gender == "Kadın"
-                  ? const AssetImage(ImagePath.userFemaleLogo) as ImageProvider
-                  : const AssetImage(ImagePath.userMaleLogo) as ImageProvider,
-          backgroundColor: Colors.white,
+        DertCircleAvatar(
+          profileImageUrl: widget.user?.profileImageUrl,
+          gender: widget.user!.gender,
           radius: 50,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: ScreenPadding.padding16px),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -67,48 +64,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   createHorizontalPageRoute(
-                      FollowersScreen(user: widget.user!)),
+                      FollowScreen(showFollowers: true, user: widget.user!)),
                 );
               },
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: "200", style: DertTextStyle.roboto.t14w700purple),
-                    TextSpan(
-                        text: "\nTakipçi",
-                        style: DertTextStyle.roboto.t14w400purple),
-                  ],
-                ),
-              ),
+              child: Text("\n${DertText.followers}",
+                  style: DertTextStyle.roboto.t14w400purple),
             ),
             const SizedBox(width: 24),
             InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  createHorizontalPageRoute(FollowsScreen(user: widget.user!)),
+                  createHorizontalPageRoute(
+                      FollowScreen(showFollowers: false, user: widget.user!)),
                 );
               },
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    TextSpan(
-                        text: "200", style: DertTextStyle.roboto.t14w700purple),
-                    TextSpan(
-                        text: "\nTakip",
-                        style: DertTextStyle.roboto.t14w400purple),
-                  ],
-                ),
-              ),
+              child: Text("\n${DertText.follows}",
+                  style: DertTextStyle.roboto.t14w400purple),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: ScreenPadding.padding16px),
         Text("@${widget.user!.username}",
             style: DertTextStyle.roboto.t24w400purple),
       ],

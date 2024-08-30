@@ -64,7 +64,6 @@ class _UsersScreenState extends State<UsersScreen> {
                     return _usersEmpty(context);
                   }
                   return ListView.builder(
-                    // scrollDirection: Axis.horizontal,
                     itemCount: derts.length,
                     itemBuilder: (context, index) {
                       final dert = derts[index];
@@ -110,7 +109,7 @@ class _UsersScreenState extends State<UsersScreen> {
             Navigator.pop(context);
           },
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: ScreenPadding.padding16px),
         _usersEmptyCard(
           context,
           path: ImagePath.drawing1,
@@ -157,16 +156,16 @@ class _UsersScreenState extends State<UsersScreen> {
           onPressed: listPressed,
           icon: Icon(
             Icons.menu,
-            size: 30,
+            size: IconSize.size30px,
             color: DertColor.icon.darkpurple,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: ScreenPadding.padding8px),
         IconButton(
           onPressed: iconPressed,
           icon: Icon(
             Icons.add_circle,
-            size: 30,
+            size: IconSize.size30px,
             color: DertColor.icon.darkpurple,
           ),
         ),
@@ -187,8 +186,8 @@ class _UsersScreenState extends State<UsersScreen> {
       child: Row(
         children: [
           Container(
-            height: 95,
-            width: 110,
+            height: ScreenUtil.getHeight(context) * 0.125,
+            width: ScreenUtil.getWidth(context) * 0.28,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
@@ -197,7 +196,7 @@ class _UsersScreenState extends State<UsersScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: ScreenPadding.padding12px),
           Expanded(
             child: Text(
               text,

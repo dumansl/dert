@@ -1,18 +1,28 @@
+import 'package:dert/model/follow_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'dert_circle_avatar.dart';
+
 class FollowCard extends StatelessWidget {
-  final String username;
+  final FollowModel follow;
+  final String gender;
   final String buttonImage;
+  final VoidCallback onPressed;
   const FollowCard(
-      {super.key, required this.username, required this.buttonImage});
+      {super.key,
+      required this.follow,
+      required this.buttonImage,
+      required this.gender,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        CircleAvatar(
-          backgroundColor: DertColor.background.darkpurple,
+        DertCircleAvatar(
+          profileImageUrl: follow.profileImageUrl,
+          gender: gender,
           radius: 25,
         ),
         const SizedBox(width: 8),
@@ -20,7 +30,8 @@ class FollowCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(username, style: DertTextStyle.roboto.t16w700darkpurple),
+            Text(follow.username,
+                style: DertTextStyle.roboto.t16w700darkpurple),
             RichText(
               text: TextSpan(
                 style: DefaultTextStyle.of(context).style,
@@ -37,11 +48,14 @@ class FollowCard extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        Image.asset(
-          buttonImage,
-          width: 30,
-          height: 30,
-        )
+        IconButton(
+          onPressed: onPressed,
+          icon: Image.asset(
+            buttonImage,
+            width: IconSize.size30px,
+            height: IconSize.size30px,
+          ),
+        ),
       ],
     );
   }
