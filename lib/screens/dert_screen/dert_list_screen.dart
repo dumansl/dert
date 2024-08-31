@@ -1,5 +1,7 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/dashboard_screen/widgets/answers_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_card.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
@@ -49,7 +51,17 @@ class DertListScreen extends StatelessWidget {
                         return Padding(
                           padding:
                               EdgeInsets.only(bottom: ScreenPadding.padding8px),
-                          child: DertCard(dert: dert),
+                          child: DertCard(
+                            dert: dert,
+                            bottomWidget: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                BipsButon(bips: dert.bips),
+                                AnswersButton(
+                                    dermansLength: dert.dermans.length),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),

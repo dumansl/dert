@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DertModel {
-  final String? dertId;
+  String? dertId;
   final String content;
   final bool isClosed;
   final String? selectedSolution;

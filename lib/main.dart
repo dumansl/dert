@@ -62,7 +62,7 @@ class DertMobileApp extends StatelessWidget {
       supportedLocales: [
         Locale('tr', 'TR'),
       ],
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }

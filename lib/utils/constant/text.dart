@@ -60,7 +60,7 @@ abstract class DertText {
   static String create = "Oluştur";
   static String tellYourProblem = "Derdini anlat";
   static String toBeDerman = "Derman ol";
-  static String beTheCure = "Derman ol";
+
   static String passwordForgot = "ŞİFREMİ UNUTTUM";
   static String send = "GÖNDER";
   static String dert = "DERT";
@@ -75,7 +75,10 @@ abstract class DertText {
   static String shareDertTitle = "DERDİNİZİ PAYLAŞIN";
   static String dertSendApproval =
       "Derdinizi göndermek istediğinize emin misiniz ?";
+  static String dermanSendApproval =
+      "Dermanınızı göndermek istediğinize emin misiniz ?";
   static String dertValidator = "Derdinizi giriniz.";
+  static String dermanValidator = "Dermanınızı giriniz.";
   static String dertAddedSuccess = "Dert başarıyla eklendi!";
   static String dertAddedError = "Dert eklenirken bir hata oluştu.";
   static String profile = "PROFİL";

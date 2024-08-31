@@ -2,14 +2,15 @@ import 'package:dert/model/dert_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'answer_logo.dart';
-import 'bip_logo.dart';
-
 class DertCard extends StatelessWidget {
   final DertModel dert;
+  final Widget? topWidget;
+  final Widget? bottomWidget;
   const DertCard({
     super.key,
     required this.dert,
+    this.topWidget,
+    this.bottomWidget,
   });
 
   @override
@@ -37,6 +38,10 @@ class DertCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: ScreenPadding.padding8px),
+                    child: topWidget,
+                  ),
                   Text(
                     dert.content,
                     style: DertTextStyle.roboto.t12w400white,
@@ -44,71 +49,13 @@ class DertCard extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: ScreenPadding.padding8px),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _bipButton(),
-                        _answersCount(),
-                      ],
-                    ),
+                    child: bottomWidget,
                   ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _bipButton() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenPadding.padding8px,
-        vertical: ScreenPadding.padding4px,
-      ),
-      decoration: BoxDecoration(
-        color: DertColor.button.darkpurple,
-        borderRadius: BorderRadius.all(
-          Radius.circular(SizeRadius.radius8px),
-        ),
-      ),
-      child: Row(
-        children: [
-          const BipLogo(radius: 20),
-          SizedBox(
-            width: ScreenPadding.padding8px,
-          ),
-          Text(
-            "${dert.bips}",
-            style: DertTextStyle.roboto.t12w500white,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _answersCount() {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenPadding.padding8px,
-        vertical: ScreenPadding.padding4px,
-      ),
-      decoration: BoxDecoration(
-        color: DertColor.button.darkpurple,
-        borderRadius: BorderRadius.all(
-          Radius.circular(SizeRadius.radius8px),
-        ),
-      ),
-      child: Row(
-        children: [
-          Text(
-            "${dert.dermans.length}",
-            style: DertTextStyle.roboto.t12w500white,
-          ),
-          SizedBox(width: ScreenPadding.padding8px),
-          const AnswerLogo(radius: 20),
-        ],
       ),
     );
   }
