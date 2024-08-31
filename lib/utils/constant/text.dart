@@ -80,7 +80,9 @@ abstract class DertText {
   static String dertValidator = "Derdinizi giriniz.";
   static String dermanValidator = "Dermanınızı giriniz.";
   static String dertAddedSuccess = "Dert başarıyla eklendi!";
+  static String dermanAddedSuccess = "Derman başarıyla eklendi!";
   static String dertAddedError = "Dert eklenirken bir hata oluştu.";
+  static String dermanAddedError = "Derman eklenirken bir hata oluştu.";
   static String profile = "PROFİL";
   static String followers = "TAKİPÇİ";
   static String follows = "TAKİP";

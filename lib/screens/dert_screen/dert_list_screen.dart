@@ -111,7 +111,15 @@ class DertListScreen extends StatelessWidget {
         Align(
           alignment: Alignment.centerRight,
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DertAddScreen(
+                    user: user,
+                  ),
+                ),
+              );
+            },
             icon: Icon(
               Icons.add_circle,
               size: 30,

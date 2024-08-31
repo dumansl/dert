@@ -5,6 +5,7 @@ import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -129,11 +130,22 @@ class _UsersScreenState extends State<UsersScreen> {
         _optionTitleContent(
           context,
           title: DertText.derman,
-          iconPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const DermanAddScreen()),
-            );
+          iconPressed: () async {
+            final dertService =
+                Provider.of<DertService>(context, listen: false);
+            DertModel? dert = await dertService.findRandomDert();
+            if (dert != null) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DermanAddScreen(
+                    dert: dert,
+                    user: widget.user!,
+                  ),
+                ),
+              );
+            } else {
+              snackBar(context, "No dert found!");
+            }
           },
           listPressed: () {
             Navigator.push(

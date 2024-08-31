@@ -1,5 +1,7 @@
+import 'package:dert/model/dert_model.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/auth_service.dart';
+import 'package:dert/services/dert_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -182,12 +184,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           SizedBox(height: ScreenPadding.padding16px),
           InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const DermanAddScreen(),
-                ),
-              );
+            onTap: () async {
+              final dertService =
+                  Provider.of<DertService>(context, listen: false);
+              DertModel? dert = await dertService.findRandomDert();
+              if (dert != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DermanAddScreen(
+                      dert: dert,
+                      user: widget.user!,
+                    ),
+                  ),
+                );
+              } else {
+                snackBar(context, "No dert found!");
+              }
             },
             child: Row(
               children: [

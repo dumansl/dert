@@ -31,47 +31,64 @@ class DertService with ChangeNotifier {
   }
 
   Stream<List<DertModel>> streamDerts(String userId) {
-    return _db
-        .collection('users')
-        .doc(userId)
-        .collection('my_derts')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => DertModel.fromFirestore(doc)).toList());
+    try {
+      return _db
+          .collection('users')
+          .doc(userId)
+          .collection('my_derts')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => DertModel.fromFirestore(doc))
+              .toList());
+    } catch (e) {
+      throw Exception("Dertleri akışa alma hatası: $e");
+    }
   }
 
   Future<DertModel?> findRandomDert() async {
-    QuerySnapshot dertSnapshot = await _db.collection('derts').get();
+    return handleErrors(
+      operation: () async {
+        QuerySnapshot dertSnapshot = await _db.collection('derts').get();
 
-    if (dertSnapshot.docs.isEmpty) {
-      throw Exception("Hiç dert bulunamadı");
-    }
+        if (dertSnapshot.docs.isEmpty) {
+          throw Exception("Hiç dert bulunamadı");
+        }
 
-    Random random = Random();
-    int randomIndex = random.nextInt(dertSnapshot.docs.length);
-    DocumentSnapshot randomDertDoc = dertSnapshot.docs[randomIndex];
+        Random random = Random();
+        int randomIndex = random.nextInt(dertSnapshot.docs.length);
+        DocumentSnapshot randomDertDoc = dertSnapshot.docs[randomIndex];
 
-    DertModel? derts = DertModel.fromFirestore(randomDertDoc);
+        DertModel? derts = DertModel.fromFirestore(randomDertDoc);
 
-    return derts;
+        return derts;
+      },
+      onError: (e) {
+        throw Exception("Rastgele dert bulma hatası: $e");
+      },
+    );
   }
 
   Future<void> addDermanToDert(DertModel dert, DermanModel derman) async {
-    dert.dermans.add(derman);
+    return handleErrors(
+      operation: () async {
+        dert.dermans.add(derman);
 
-    await _db
-        .collection('derts')
-        .doc(dert.dertId)
-        .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
+        await _db
+            .collection('derts')
+            .doc(dert.dertId)
+            .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
 
-    if (dert.userId != null) {
-      await _db
-          .collection('users')
-          .doc(dert.userId)
-          .collection('my_derts')
-          .doc(dert.dertId)
-          .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
-    }
-    notifyListeners();
+        await _db
+            .collection('users')
+            .doc(dert.userId)
+            .collection('my_derts')
+            .doc(dert.dertId)
+            .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Derman ekleme hatası: $e");
+      },
+    );
   }
 }

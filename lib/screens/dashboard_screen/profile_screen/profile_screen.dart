@@ -4,7 +4,6 @@ import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_circle_avatar.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/utils/constant/constants.dart';
-import 'package:dert/utils/constant/sizes.dart';
 import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:flutter/material.dart';
 

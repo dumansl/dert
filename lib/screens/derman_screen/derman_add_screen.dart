@@ -1,25 +1,38 @@
+import 'package:dert/model/dert_model.dart';
+import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/dashboard_screen/widgets/alert_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/warning_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dert_card.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dert_circle_avatar.dart';
 import 'package:dert/screens/dert_screen/widgets/custom_dialog.dart';
+import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DermanAddScreen extends StatefulWidget {
-  const DermanAddScreen({super.key});
+  final UserModel user;
+  final DertModel dert;
+  const DermanAddScreen({super.key, required this.dert, required this.user});
 
   @override
-  State<DermanAddScreen> createState() => _DertAddScreenState();
+  State<DermanAddScreen> createState() => _DermanAddScreenState();
 }
 
-class _DertAddScreenState extends State<DermanAddScreen> {
+class _DermanAddScreenState extends State<DermanAddScreen> {
   final FocusNode _focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   String _derman = "";
 
+  UserModel? user;
+
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
   }
 
   @override
@@ -28,10 +41,50 @@ class _DertAddScreenState extends State<DermanAddScreen> {
     super.dispose();
   }
 
+  Future<void> _fetchUserData() async {
+    final userService = Provider.of<AuthService>(context, listen: false);
+    user = await userService.getUserById(widget.dert.userId);
+    setState(() {});
+  }
+
+  void _submitForm() {
+    final derman = DermanModel(
+      isApproved: false,
+      content: _derman,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      userId: widget.user.uid,
+    );
+
+    Provider.of<DertService>(context, listen: false)
+        .addDermanToDert(widget.dert, derman)
+        .then((_) {
+      Navigator.of(context).pop();
+      snackBar(
+        context,
+        DertText.dermanAddedSuccess,
+        bgColor: DertColor.state.success,
+      );
+      _resetForm();
+    }).catchError((error) {
+      debugPrint('Derman ekleme hatası: $error');
+      snackBar(
+        context,
+        DertText.dermanAddedError,
+      );
+    });
+  }
+
+  void _resetForm() {
+    formKey.currentState!.reset();
+    setState(() {
+      _derman = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: DertAppbar(
         title: DertText.derman,
       ),
@@ -46,44 +99,73 @@ class _DertAddScreenState extends State<DermanAddScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  WarningButton(size: 24, onPressed: () {}),
-                  // DertCard(dert: dert),
+                  AlertButton(size: 24, onPressed: () {}),
+                  Expanded(
+                    child: DertCard(
+                      dert: widget.dert,
+                      bottomWidget: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BipsButon(bips: widget.dert.bips),
+                          user == null
+                              ? const CircularProgressIndicator()
+                              : Row(
+                                  children: [
+                                    Text(
+                                      "@${user!.username}",
+                                      style: DertTextStyle.roboto.t14w700white,
+                                    ),
+                                    SizedBox(width: ScreenPadding.padding8px),
+                                    DertCircleAvatar(
+                                      profileImageUrl: user!.profileImageUrl,
+                                      gender: user!.gender,
+                                      radius: 15,
+                                    ),
+                                  ],
+                                ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              TextFormField(
-                autofocus: true,
-                focusNode: _focusNode,
-                decoration: InputDecoration(
-                  labelText: DertText.toBeDerman.toUpperCase(),
-                  isDense: true,
-                  labelStyle: DertTextStyle.roboto.t20w500darkpurple,
-                  border: InputBorder.none,
-                ),
-                maxLines: 7,
-                maxLength: 100,
-                onSaved: (newValue) {
-                  _derman = newValue!;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return DertText.dermanValidator;
-                  }
+              Expanded(
+                child: TextFormField(
+                  autofocus: true,
+                  focusNode: _focusNode,
+                  decoration: InputDecoration(
+                    labelText: DertText.toBeDerman.toUpperCase(),
+                    isDense: true,
+                    labelStyle: DertTextStyle.roboto.t20w500darkpurple,
+                    border: InputBorder.none,
+                  ),
+                  maxLines: 7,
+                  maxLength: 280,
+                  onSaved: (newValue) {
+                    _derman = newValue!;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return DertText.dermanValidator;
+                    }
 
-                  return null;
-                },
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 24),
               DertButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      DialogUtils.showMyDialog(
-                          context, DertText.dermanSendApproval, () => null);
-                    }
-                    debugPrint(_derman);
-                  },
-                  text: DertText.send,
-                  style: DertTextStyle.roboto.t20w500white),
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    formKey.currentState!.save();
+                    DialogUtils.showMyDialog(
+                        context, DertText.dermanSendApproval, _submitForm);
+                  }
+                  debugPrint(_derman);
+                },
+                text: DertText.send,
+                style: DertTextStyle.roboto.t20w500white,
+              ),
             ],
           ),
         ),

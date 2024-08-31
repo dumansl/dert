@@ -32,6 +32,7 @@ class _DertAddScreenState extends State<DertAddScreen> {
       dermans: [],
       bips: _bip,
       timestamp: DateTime.now().millisecondsSinceEpoch,
+      userId: widget.user!.uid,
     );
 
     Provider.of<DertService>(context, listen: false)
@@ -95,7 +96,7 @@ class _DertAddScreenState extends State<DertAddScreen> {
                   border: InputBorder.none,
                 ),
                 maxLines: 7,
-                maxLength: 100,
+                maxLength: 280,
                 onSaved: (newValue) {
                   _dert = newValue!;
                 },

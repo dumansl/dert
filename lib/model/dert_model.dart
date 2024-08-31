@@ -8,7 +8,7 @@ class DertModel {
   final int timestamp;
   final List<DermanModel> dermans;
   final int bips;
-  final String? userId;
+  final String userId;
 
   DertModel({
     this.dertId,
@@ -18,7 +18,7 @@ class DertModel {
     required this.bips,
     required this.timestamp,
     this.selectedSolution,
-    this.userId,
+    required this.userId,
   });
 
   factory DertModel.fromFirestore(DocumentSnapshot doc) {
@@ -44,6 +44,7 @@ class DertModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'content': content,
       'isClosed': isClosed,
       'derman': dermans.map((item) => item.toMap()).toList(),
@@ -59,7 +60,7 @@ class DertModel {
 }
 
 class DermanModel {
-  final int userId;
+  final String userId;
   final String content;
   final bool isApproved;
   final int timestamp;
