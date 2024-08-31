@@ -11,19 +11,23 @@ class Typography {
   final TextStyle t20w500darkpurple;
   final TextStyle t20w500white;
   final TextStyle t18w700purple;
+  final TextStyle t18w700white;
   final TextStyle t18w700darkpurple;
   final TextStyle t16w700darkpurple;
   final TextStyle t16w600darkPurple;
   final TextStyle t16w500darkpurple;
   final TextStyle t16w500white;
   final TextStyle t16w400purple;
+  final TextStyle t16w400white;
   final TextStyle t16w400lightPurple;
   final TextStyle t14w500darkpurple;
   final TextStyle t14w700purple;
   final TextStyle t14w400white;
   final TextStyle t14w400purple;
+  final TextStyle t12w700white;
   final TextStyle t12w500white;
   final TextStyle t12w400white;
+  final TextStyle t10w500white;
   final TextStyle t10w400green;
   final TextStyle t10w800grey;
   Typography({required this.baseStyle})
@@ -52,6 +56,11 @@ class Typography {
           fontWeight: FontWeight.w700,
           color: DertColor.text.purple,
         ),
+        t18w700white = baseStyle.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
         t18w700darkpurple = baseStyle.copyWith(
           fontSize: 18,
           fontWeight: FontWeight.w700,
@@ -61,6 +70,11 @@ class Typography {
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: DertColor.text.purple,
+        ),
+        t16w400white = baseStyle.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
         ),
         t16w400lightPurple = baseStyle.copyWith(
           fontSize: 16,
@@ -117,6 +131,11 @@ class Typography {
           fontWeight: FontWeight.w400,
           color: DertColor.text.purple,
         ),
+        t12w700white = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
         t12w400white = baseStyle.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w400,
@@ -131,6 +150,11 @@ class Typography {
           fontSize: 12,
           fontWeight: FontWeight.w800,
           color: DertColor.text.grey,
+        ),
+        t10w500white = baseStyle.copyWith(
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
         ),
         t10w400green = baseStyle.copyWith(
           fontSize: 12,

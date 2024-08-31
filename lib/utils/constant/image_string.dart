@@ -14,6 +14,10 @@ abstract class ImagePath {
   static const String answerLogo = "assets/images/logo/conversation_logo.webp";
   static const String notificationLogo =
       "assets/images/logo/notification_logo.webp";
+  static const String emailLogo = "assets/images/logo/email_logo.webp";
+  static const String genderLogo = "assets/images/logo/gender_logo.webp";
+  static const String spotifyLogo = "assets/images/logo/spotify_logo.webp";
+  static const String randomLogo = "assets/images/logo/random_logo.webp";
   static const String phoneLogo = "assets/images/logo/phone_logo.webp";
   static const String logOutLogo = "assets/images/logo/logout_logo.webp";
   static const String userMaleLogo = "assets/images/logo/user_boy.webp";

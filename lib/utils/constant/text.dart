@@ -85,4 +85,7 @@ abstract class DertText {
       "“DAHA KİMSEYİ TAKİP ETMEMİŞSİN 🥲 ETKİLEŞİMİNİN ARTMASI İÇİN İNSANLARLA İLETİŞİMİ SIKI TUTMAYI UNUTMA 😉";
   static String followersEmpty =
       "ÜZÜLME ☺️ UYGULAMA DA VAKİT GEÇİRDİKÇE DAHA FAZLA ARKADAŞ EDİNECEKSİN, İYİ ŞANSLAR 🥰";
+  static String selectedMusic = "Seçili Müzik";
+  static String accountInformation = "Hesap Bilgileri";
+  static String profileEdit = "Profili Düzenle";
 }
