@@ -55,10 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Expanded(
-                  child: TabBarView(children: [
-                    const MainScreen(),
-                    UsersScreen(user: widget.user),
-                  ]),
+                  child: TabBarView(
+                    children: [
+                      const MainScreen(),
+                      UsersScreen(user: widget.user),
+                    ],
+                  ),
                 )
               ],
             ),

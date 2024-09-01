@@ -28,6 +28,7 @@ class Typography {
   final TextStyle t12w700white;
   final TextStyle t12w500white;
   final TextStyle t12w400white;
+  final TextStyle t12w400grey;
   final TextStyle t10w500white;
   final TextStyle t10w400green;
   final TextStyle t10w800grey;
@@ -146,6 +147,11 @@ class Typography {
           fontSize: 12,
           fontWeight: FontWeight.w400,
           color: Colors.white,
+        ),
+        t12w400grey = baseStyle.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: Colors.grey.shade300,
         ),
         t12w500white = baseStyle.copyWith(
           fontSize: 12,

@@ -17,7 +17,7 @@ class CustomDertButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(SizeRadius.radius8px),
         ),
         backgroundColor: DertColor.button.darkpurple,
         elevation: 0,

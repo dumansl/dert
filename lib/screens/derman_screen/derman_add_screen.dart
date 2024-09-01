@@ -49,6 +49,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
 
   void _submitForm() {
     final derman = DermanModel(
+      dertId: widget.dert.dertId!,
       isApproved: false,
       content: _derman,
       timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -56,7 +57,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
     );
 
     Provider.of<DertService>(context, listen: false)
-        .addDermanToDert(widget.dert, derman)
+        .addDermanToDert(widget.user.uid, widget.dert, derman)
         .then((_) {
       Navigator.of(context).pop();
       snackBar(
@@ -99,7 +100,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  AlertButton(size: 24, onPressed: () {}),
+                  AlertButton(size: IconSize.size24px, onPressed: () {}),
                   Expanded(
                     child: DertCard(
                       dert: widget.dert,
@@ -153,7 +154,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: ScreenPadding.padding24px),
               DertButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {

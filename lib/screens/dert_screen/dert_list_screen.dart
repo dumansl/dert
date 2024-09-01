@@ -83,7 +83,7 @@ class DertListScreen extends StatelessWidget {
           onPressed: () {},
           icon: Icon(
             Icons.filter_alt,
-            size: 30,
+            size: IconSize.size30px,
             color: DertColor.icon.darkpurple,
           ),
         ),
@@ -97,7 +97,7 @@ class DertListScreen extends StatelessWidget {
           },
           icon: Icon(
             Icons.add_circle,
-            size: 30,
+            size: IconSize.size30px,
             color: DertColor.icon.darkpurple,
           ),
         ),
@@ -122,7 +122,7 @@ class DertListScreen extends StatelessWidget {
             },
             icon: Icon(
               Icons.add_circle,
-              size: 30,
+              size: IconSize.size30px,
               color: DertColor.icon.darkpurple,
             ),
           ),
@@ -133,17 +133,17 @@ class DertListScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 250,
-              width: 250,
+              height: ScreenUtil.getWidth(context) * 0.6,
+              width: ScreenUtil.getWidth(context) * 0.6,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(ImagePath.drawing3),
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: ScreenPadding.padding16px),
             SizedBox(
-              width: 300,
+              width: ScreenUtil.getWidth(context) * 0.76,
               child: Text(
                 DertText.dertListEmptyDertTitle,
                 textAlign: TextAlign.center,

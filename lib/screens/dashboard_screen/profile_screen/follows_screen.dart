@@ -76,20 +76,21 @@ class FollowScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          height: 300,
-          width: 300,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            image: DecorationImage(
+          height: ScreenUtil.getWidth(context) * 0.76,
+          width: ScreenUtil.getWidth(context) * 0.76,
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeRadius.radius5px)),
+            image: const DecorationImage(
                 image: AssetImage(
                   ImagePath.onboardImage,
                 ),
                 fit: BoxFit.cover),
           ),
         ),
-        const SizedBox(height: 50),
+        SizedBox(height: ScreenPadding.padding52px),
         SizedBox(
-          width: 300,
+          width: ScreenUtil.getWidth(context) * 0.76,
           child: Text(
             DertText.followsEmpty,
             textAlign: TextAlign.center,
@@ -106,20 +107,21 @@ class FollowScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          height: 300,
-          width: 300,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            image: DecorationImage(
+          height: ScreenUtil.getWidth(context) * 0.76,
+          width: ScreenUtil.getWidth(context) * 0.76,
+          decoration: BoxDecoration(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeRadius.radius5px)),
+            image: const DecorationImage(
                 image: AssetImage(
                   ImagePath.drawing1,
                 ),
                 fit: BoxFit.cover),
           ),
         ),
-        const SizedBox(height: 50),
+        SizedBox(height: ScreenPadding.padding52px),
         SizedBox(
-          width: 300,
+          width: ScreenUtil.getWidth(context) * 0.76,
           child: Text(
             DertText.followersEmpty,
             textAlign: TextAlign.center,

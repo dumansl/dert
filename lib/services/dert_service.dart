@@ -9,6 +9,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class DertService with ChangeNotifier {
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
 
+  Future<DertModel?> getDert(String dertId) async {
+    return handleErrors(
+      operation: () async {
+        DocumentSnapshot<Map<String, dynamic>> dertDoc =
+            await _db.collection("derts").doc(dertId).get();
+
+        if (dertDoc.exists) {
+          return DertModel.fromFirestore(dertDoc);
+        } else {
+          debugPrint("Dert document does not exist for dertId: $dertId");
+          return null;
+        }
+      },
+      onError: (e) {
+        debugPrint("Error fetching user data: $e");
+        throw Exception("Kullanıcı bilgilerini çekerken hata oluştu: $e");
+      },
+    );
+  }
+
   Future<void> addDert(String userId, DertModel dert) async {
     return handleErrors(
       operation: () async {
@@ -68,7 +88,8 @@ class DertService with ChangeNotifier {
     );
   }
 
-  Future<void> addDermanToDert(DertModel dert, DermanModel derman) async {
+  Future<void> addDermanToDert(
+      String userId, DertModel dert, DermanModel derman) async {
     return handleErrors(
       operation: () async {
         dert.dermans.add(derman);
@@ -84,11 +105,32 @@ class DertService with ChangeNotifier {
             .collection('my_derts')
             .doc(dert.dertId)
             .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
+
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_dermans')
+            .add(derman.toMap());
         notifyListeners();
       },
       onError: (e) {
         throw Exception("Derman ekleme hatası: $e");
       },
     );
+  }
+
+  Stream<List<DermanModel>> streamDerman(String userId) {
+    try {
+      return _db
+          .collection('users')
+          .doc(userId)
+          .collection('my_dermans')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => DermanModel.fromMap(doc.data()))
+              .toList());
+    } catch (e) {
+      throw Exception("Dertleri akışa alma hatası: $e");
+    }
   }
 }

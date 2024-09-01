@@ -16,8 +16,8 @@ class DialogUtils {
                 Navigator.pop(context);
               },
               child: Container(
-                width: 24,
-                height: 24,
+                width: IconSize.size24px,
+                height: IconSize.size24px,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(ImagePath.closeLogo),

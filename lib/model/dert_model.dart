@@ -61,12 +61,14 @@ class DertModel {
 
 class DermanModel {
   final String userId;
+  final String dertId;
   final String content;
   final bool isApproved;
   final int timestamp;
 
   DermanModel({
     required this.userId,
+    required this.dertId,
     required this.content,
     required this.isApproved,
     required this.timestamp,
@@ -75,6 +77,7 @@ class DermanModel {
   factory DermanModel.fromMap(Map<String, dynamic> map) {
     return DermanModel(
       userId: map['userId'] ?? '',
+      dertId: map['dertId'] ?? '',
       content: map['content'] ?? '',
       isApproved: map['isApproved'] ?? false,
       timestamp: map['timestamp'] ?? 0,
@@ -84,6 +87,7 @@ class DermanModel {
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
+      'dertId': dertId,
       'content': content,
       'isApproved': isApproved,
       'timestamp': timestamp,

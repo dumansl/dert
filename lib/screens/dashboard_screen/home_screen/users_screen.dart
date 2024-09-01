@@ -2,6 +2,7 @@ import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/answers_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/derman_card.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
@@ -38,6 +39,7 @@ class _UsersScreenState extends State<UsersScreen> {
         vertical: ScreenPadding.padding8px,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.user!.musicUrl != null &&
               widget.user!.musicUrl!.isNotEmpty)
@@ -53,6 +55,29 @@ class _UsersScreenState extends State<UsersScreen> {
                 ),
               ),
             ),
+          _optionTitleContent(
+            context,
+            title: DertText.dert,
+            iconPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DertAddScreen(
+                    user: widget.user,
+                  ),
+                ),
+              );
+            },
+            listPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DertListScreen(user: widget.user),
+                ),
+              );
+              Navigator.pop(context);
+            },
+          ),
           Expanded(
             child: StreamBuilder<List<DertModel>>(
               stream: dertProvider.streamDerts(widget.user!.uid),
@@ -64,16 +89,22 @@ class _UsersScreenState extends State<UsersScreen> {
                 } else {
                   final derts = snapshot.data ?? [];
                   if (derts.isEmpty) {
-                    return _usersEmpty(context);
+                    return _usersEmptyCard(
+                      context,
+                      path: ImagePath.drawing1,
+                      text: DertText.usersEmptyDertTitle,
+                    );
                   }
                   return ListView.builder(
+                    scrollDirection: Axis.horizontal,
                     itemCount: derts.length,
                     itemBuilder: (context, index) {
                       final dert = derts[index];
                       return Padding(
                         padding:
-                            EdgeInsets.only(bottom: ScreenPadding.padding8px),
+                            EdgeInsets.only(right: ScreenPadding.padding8px),
                         child: DertCard(
+                          width: ScreenUtil.getWidth(context) * 0.76,
                           dert: dert,
                           bottomWidget: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,78 +121,103 @@ class _UsersScreenState extends State<UsersScreen> {
               },
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _usersEmpty(BuildContext context) {
-    return Column(
-      children: [
-        _optionTitleContent(
-          context,
-          title: DertText.dert,
-          iconPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DertAddScreen(
-                  user: widget.user,
-                ),
-              ),
-            );
-          },
-          listPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DertListScreen(user: widget.user),
-              ),
-            );
-            Navigator.pop(context);
-          },
-        ),
-        SizedBox(height: ScreenPadding.padding16px),
-        _usersEmptyCard(
-          context,
-          path: ImagePath.drawing1,
-          text: DertText.usersEmptyDertTitle,
-        ),
-        _optionTitleContent(
-          context,
-          title: DertText.derman,
-          iconPressed: () async {
-            final dertService =
-                Provider.of<DertService>(context, listen: false);
-            DertModel? dert = await dertService.findRandomDert();
-            if (dert != null) {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DermanAddScreen(
-                    dert: dert,
-                    user: widget.user!,
+          _optionTitleContent(
+            context,
+            title: DertText.derman,
+            iconPressed: () async {
+              final dertService =
+                  Provider.of<DertService>(context, listen: false);
+              DertModel? dert = await dertService.findRandomDert();
+              if (dert != null) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DermanAddScreen(
+                      dert: dert,
+                      user: widget.user!,
+                    ),
                   ),
+                );
+              } else {
+                snackBar(context, "No derman found!");
+              }
+            },
+            listPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DermanListScreen(),
                 ),
               );
-            } else {
-              snackBar(context, "No dert found!");
-            }
-          },
-          listPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const DermanListScreen(),
-              ),
-            );
-          },
-        ),
-        _usersEmptyCard(
-          context,
-          path: ImagePath.drawing2,
-          text: DertText.usersEmptyDermanTitle,
-        )
-      ],
+            },
+          ),
+          Expanded(
+            child: StreamBuilder<List<DermanModel>>(
+              stream: dertProvider.streamDerman(widget.user!.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final dermans = snapshot.data ?? [];
+
+                  if (dermans.isEmpty) {
+                    return _usersEmptyCard(
+                      context,
+                      path: ImagePath.drawing2,
+                      text: DertText.usersEmptyDermanTitle,
+                    );
+                  }
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: dermans.length,
+                    itemBuilder: (context, index) {
+                      final derman = dermans[index];
+
+                      return FutureBuilder<DertModel?>(
+                        future: dertProvider.getDert(derman.dertId),
+                        builder: (context, dertSnapshot) {
+                          if (dertSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (dertSnapshot.hasError ||
+                              !dertSnapshot.hasData) {
+                            return Center(
+                                child: Text(
+                                    'Dert bulunamadı: ${dertSnapshot.error ?? ''}'));
+                          } else {
+                            final dert = dertSnapshot.data!;
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  right: ScreenPadding.padding8px),
+                              child: DermanCard(
+                                width: ScreenUtil.getWidth(context) * 0.76,
+                                derman: derman,
+                                dert: dert,
+                                bottomWidget: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                    derman.isApproved
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    size: IconSize.size24px,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -212,7 +268,7 @@ class _UsersScreenState extends State<UsersScreen> {
             height: ScreenUtil.getHeight(context) * 0.125,
             width: ScreenUtil.getWidth(context) * 0.28,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(SizeRadius.radius10px),
               image: DecorationImage(
                 image: AssetImage(path),
                 fit: BoxFit.cover,

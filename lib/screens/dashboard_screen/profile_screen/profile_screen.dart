@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text("\n${DertText.followers}",
                   style: DertTextStyle.roboto.t14w400purple),
             ),
-            const SizedBox(width: 24),
+            SizedBox(width: ScreenPadding.padding24px),
             InkWell(
               onTap: () {
                 Navigator.push(
@@ -166,15 +166,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Row(
           children: [
             Container(
-              height: 24,
-              width: 24,
+              height: IconSize.size24px,
+              width: IconSize.size24px,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(logoPath),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: ScreenPadding.padding8px),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,8 +190,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // _showMyDialog(context);
                 },
                 child: Container(
-                  height: 24,
-                  width: 24,
+                  height: IconSize.size24px,
+                  width: IconSize.size24px,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage(ImagePath.randomLogo),

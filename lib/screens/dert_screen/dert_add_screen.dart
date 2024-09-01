@@ -108,7 +108,7 @@ class _DertAddScreenState extends State<DertAddScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: ScreenPadding.padding24px),
               CustomDertButton(
                 text: DertText.send,
                 onPressed: () {
