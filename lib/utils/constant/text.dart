@@ -71,6 +71,8 @@ abstract class DertText {
       "Allah ‘ım ne dertler var” demek istemez misin ? İnsanlara derman ver veya yüzünü gülümsetecek 😏 cevaplar gönder.";
   static String dertListEmptyDertTitle =
       "DERDİNİN OLMAMASİ NE GÜZEL 😒 YINE DE DERTLEŞMEK İSTERSEN YUKARI DA Kİ EKLEME BUTONUNU KULLANABİLİRSİN.";
+  static String dermanListEmptyDertTitle =
+      "“ALLAH ‘IM NE DERTLER VAR”\n DEMEK İSTEMEZ MİSİN ?\n İNSANLARA DERMAN VER VEYA YÜZÜNÜ\n GÜLÜMSETECEK 😏 CEVAPLAR GÖNDER.";
   static String shareDert = "DERDİNİ PAYLAŞ";
   static String shareDertTitle = "DERDİNİZİ PAYLAŞIN";
   static String dertSendApproval =

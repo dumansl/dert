@@ -371,7 +371,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const DermanListScreen(),
+                            builder: (context) =>
+                                DermanListScreen(user: widget.user),
                           ),
                         );
                       },

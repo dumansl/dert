@@ -60,11 +60,14 @@ class DermanCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(derman.content,
-                      style: DertTextStyle.roboto.t12w400white,
-                      textAlign: TextAlign.justify,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis),
+                  Padding(
+                    padding: EdgeInsets.only(top: ScreenPadding.padding16px),
+                    child: Text(derman.content,
+                        style: DertTextStyle.roboto.t12w400white,
+                        textAlign: TextAlign.justify,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis),
+                  ),
                   if (bottomWidget != null) ...[
                     Padding(
                       padding:
