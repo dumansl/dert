@@ -220,7 +220,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const EditProfileScreen(),
+                builder: (context) => EditProfileScreen(
+                  user: widget.user!,
+                ),
               ),
             );
           },

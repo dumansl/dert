@@ -20,7 +20,6 @@ class DertAppbar extends StatelessWidget implements PreferredSizeWidget {
         },
         icon: Icon(Icons.arrow_back, color: DertColor.icon.darkpurple),
       ),
-      backgroundColor: Colors.white,
       elevation: 0.0,
       iconTheme: IconThemeData(
         color: DertColor.icon.darkpurple,

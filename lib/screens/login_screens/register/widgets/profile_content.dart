@@ -22,8 +22,6 @@ class _ProfileContentState extends State<ProfileContent> {
   String _username = '';
   String _gender = '';
   int _birthdate = 0;
-  // String? _profileImageUrl;
-  // bool _isUploadingImage = false;
 
   Future<void> _selectBirthdate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -39,26 +37,6 @@ class _ProfileContentState extends State<ProfileContent> {
     }
   }
 
-  // Future<void> _uploadProfileImage() async {
-  //   setState(() {
-  //     _isUploadingImage = true; // Yüklenme işaretini göster
-  //   });
-
-  //   try {
-  //     String? imageUrl = await Provider.of<AuthService>(context, listen: false)
-  //         .uploadProfileImage();
-  //     setState(() {
-  //       _profileImageUrl = imageUrl;
-  //     });
-  //   } catch (e) {
-  //     snackBar(context, "Resim yükleme sırasında bir hata oluştu: $e");
-  //   } finally {
-  //     setState(() {
-  //       _isUploadingImage = false; // Yüklenme işaretini gizle
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -72,21 +50,6 @@ class _ProfileContentState extends State<ProfileContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // CircleAvatar(
-                  //   radius: 50,
-                  //   backgroundImage: _profileImageUrl != null
-                  //       ? NetworkImage(_profileImageUrl!)
-                  //       : null,
-                  //   child: _profileImageUrl == null
-                  //       ? IconButton(
-                  //           icon: _isUploadingImage
-                  //               ? const Center(
-                  //                   child: CircularProgressIndicator())
-                  //               : const Icon(Icons.camera_alt),
-                  //           onPressed: _uploadProfileImage,
-                  //         )
-                  //       : null,
-                  // ),
                   CustomInputText(
                     hintText: DertText.registerUserName,
                     onSaved: (newValue) {
