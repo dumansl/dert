@@ -1,4 +1,5 @@
 import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
+import 'package:dert/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dert/model/user_model.dart';
@@ -25,11 +26,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? _profileImageUrl;
   bool _isUploadingImage = false;
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+
+  bool _showPassword = false;
+  bool _showPassword2 = false;
+  bool _showPassword3 = false;
 
   late String _firstname = widget.user.firstName;
   late String _lastname = widget.user.lastName;
   late String _username = widget.user.username;
   late String _gender = widget.user.gender;
+
+  String _oldPassword = "";
+  String _password = "";
+  String _confirmPassword = "";
 
   Future<void> _uploadProfileImage() async {
     setState(() {
@@ -89,6 +99,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  Future<void> _changePassword(
+      String currentPassword, String newPassword) async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        authService.changePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
+        snackBar(context, "Şifre başarıyla değiştirildi.",
+            bgColor: DertColor.state.success);
+      } catch (e) {
+        snackBar(context, "Şifre değiştirme hatası: $e",
+            bgColor: DertColor.state.error);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
@@ -100,7 +128,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: ScreenPadding.padding24px,
+            horizontal: ScreenPadding.padding16px,
             vertical: ScreenPadding.padding16px,
           ),
           child: SingleChildScrollView(
@@ -118,7 +146,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onPressed: () => _updateInformation(userService),
                   ),
                   const SizedBox(height: 16),
-                  _changePassword(context)
+                  _changePasswordContent(context)
                 ],
               ),
             ),
@@ -128,7 +156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Container _changePassword(BuildContext context) {
+  Container _changePasswordContent(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -137,46 +165,107 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Radius.circular(8),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(DertText.changePassword,
-              style: DertTextStyle.roboto.t18w700white),
-          const SizedBox(height: 16),
-          DashboardInputText(
-            labelText: "Eski Şifre",
-            obscureText: true,
-            borderColor: Colors.white,
-            style: DertTextStyle.roboto.t14w500white,
-          ),
-          const SizedBox(height: 16),
-          DashboardInputText(
-            labelText: "Yeni Şifre",
-            obscureText: true,
-            borderColor: Colors.white,
-            style: DertTextStyle.roboto.t14w500white,
-          ),
-          const SizedBox(height: 16),
-          DashboardInputText(
-            labelText: "Şifreyi Onayla",
-            obscureText: true,
-            borderColor: Colors.white,
-            style: DertTextStyle.roboto.t14w500white,
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: CustomDashboardButton(
-              text: DertText.change,
-              onPressed: () {
-                DialogUtils.showMyDialog(
-                  context,
-                  DertText.changePasswordAlertDialog,
-                  () {},
-                );
+      child: Form(
+        key: _formKey2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(DertText.changePassword,
+                style: DertTextStyle.roboto.t18w700white),
+            const SizedBox(height: 16),
+            DashboardInputText(
+              labelText: DertText.oldPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _showPassword ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _showPassword = !_showPassword;
+                  });
+                },
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return DertText.passwordPlease;
+                } else if (value.length < 6) {
+                  return DertText.passwordCharachter;
+                }
+                return null;
               },
+              onSaved: (newValue) {
+                _oldPassword = newValue!;
+              },
+              obscureText: !_showPassword,
+              borderColor: Colors.white,
+              style: DertTextStyle.roboto.t14w500white,
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            DashboardInputText(
+              labelText: DertText.newPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _showPassword2 ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _showPassword2 = !_showPassword2;
+                  });
+                },
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return DertText.passwordPlease;
+                } else if (value.length < 6) {
+                  return DertText.passwordCharachter;
+                }
+                return null;
+              },
+              onSaved: (newValue) {
+                _password = newValue!;
+              },
+              obscureText: !_showPassword2,
+              borderColor: Colors.white,
+              style: DertTextStyle.roboto.t14w500white,
+            ),
+            const SizedBox(height: 16),
+            DashboardInputText(
+              labelText: DertText.confirmPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _showPassword3 ? Icons.visibility : Icons.visibility_off,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _showPassword3 = !_showPassword3;
+                  });
+                },
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return DertText.passwordAgain;
+                }
+                return null;
+              },
+              onSaved: (newValue) {
+                _confirmPassword = newValue!;
+              },
+              obscureText: !_showPassword3,
+              borderColor: Colors.white,
+              style: DertTextStyle.roboto.t14w500white,
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: CustomDashboardButton(
+                text: DertText.change,
+                onPressed: () => _changePassword(_oldPassword, _password),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

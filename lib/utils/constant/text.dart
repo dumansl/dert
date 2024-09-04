@@ -100,4 +100,10 @@ abstract class DertText {
   static String change = "DEĞİŞTİR";
   static String changePasswordAlertDialog =
       "Şifrenizi güncellemek istediğinize emin misiniz ?";
+  static String oldPassword = "Eski Şifre";
+  static String newPassword = "Yeni Şifre";
+  static String confirmPassword = "Şifreni Onayla";
+  static String passwordPlease = 'Lütfen bir şifre girin';
+  static String passwordCharachter = 'Şifreniz en az 6 karakter olmalıdır';
+  static String passwordAgain = 'Lütfen şifrenizi tekrar girin';
 }

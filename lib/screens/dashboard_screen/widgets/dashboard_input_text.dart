@@ -10,6 +10,7 @@ class DashboardInputText extends StatelessWidget {
   final TextStyle? style;
   final void Function(String)? onChanged;
   final FormFieldValidator<String>? validator;
+  final void Function(String?)? onSaved;
 
   const DashboardInputText({
     super.key,
@@ -21,6 +22,7 @@ class DashboardInputText extends StatelessWidget {
     this.suffixIcon,
     this.borderColor,
     this.style,
+    this.onSaved,
   });
 
   @override
@@ -68,7 +70,7 @@ class DashboardInputText extends StatelessWidget {
           ),
         ),
       ),
-      style: DertTextStyle.poppins.t16w400purple,
+      style: style,
       validator: validator,
     );
   }

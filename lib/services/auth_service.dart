@@ -37,7 +37,6 @@ class AuthService extends ChangeNotifier {
     );
   }
 
-  // Giriş yapma işlemi
   Future<UserModel> signInWithEmailAndPassword(
       String email, String password) async {
     return handleErrors(
@@ -138,6 +137,36 @@ class AuthService extends ChangeNotifier {
       onError: (e) {
         debugPrint("Şifre sıfırlama hatası: $e");
         throw Exception("Şifre sıfırlama işlemi başarısız oldu.");
+      },
+    );
+  }
+
+  Future<void> changePassword(
+      {required String currentPassword, required String newPassword}) async {
+    return handleErrors(
+      operation: () async {
+        User? user = _auth.currentUser;
+        if (user != null) {
+          final cred = EmailAuthProvider.credential(
+            email: user.email!,
+            password: currentPassword,
+          );
+
+          await user.reauthenticateWithCredential(cred);
+          await user.updatePassword(newPassword);
+          notifyListeners();
+        }
+      },
+      onError: (e) {
+        if (e is FirebaseAuthException) {
+          if (e.code == 'wrong-password') {
+            throw Exception("Mevcut şifre yanlış.");
+          } else {
+            throw Exception("Şifre değiştirme hatası: ${e.message}");
+          }
+        }
+        debugPrint("Şifre değiştirme hatası: $e");
+        throw Exception("Bir hata oluştu: $e");
       },
     );
   }
