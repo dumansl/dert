@@ -1,4 +1,3 @@
-import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
 import 'package:dert/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -261,7 +260,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Center(
               child: CustomDashboardButton(
                 text: DertText.change,
-                onPressed: () => _changePassword(_oldPassword, _password),
+                onPressed: () {
+                  debugPrint(_confirmPassword);
+                  _changePassword(_oldPassword, _password);
+                },
               ),
             ),
           ],
