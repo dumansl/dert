@@ -1,41 +1,14 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/services/firebase_service_provider.dart';
 import 'package:dert/services/handler_errors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AuthService extends ChangeNotifier {
   FirebaseAuth get _auth => FirebaseServiceProvider().auth;
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
   User? get currentUser => _auth.currentUser;
-  FirebaseStorage get storage => FirebaseServiceProvider().storage;
-
-  Future<UserModel?> getUserById(String uid) async {
-    return handleErrors(
-      operation: () async {
-        debugPrint("Fetching user document with UID: $uid");
-        DocumentSnapshot<Map<String, dynamic>> userDoc =
-            await _db.collection("users").doc(uid).get();
-        debugPrint("User document fetched: ${userDoc.data()}");
-
-        if (userDoc.exists) {
-          return UserModel.fromMap(userDoc.data()!, uid);
-        } else {
-          debugPrint("User document does not exist for UID: $uid");
-          return null;
-        }
-      },
-      onError: (e) {
-        debugPrint("Error fetching user data: $e");
-        throw Exception("Kullanıcı bilgilerini çekerken hata oluştu: $e");
-      },
-    );
-  }
 
   Future<void> registerUser({
     required User? user,
@@ -154,34 +127,6 @@ class AuthService extends ChangeNotifier {
         debugPrint("Kaydolma hatası: $e");
       },
     );
-  }
-
-  Future<String?> uploadProfileImage() async {
-    try {
-      final pickedFile =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        final storageRef =
-            storage.ref().child('profile_images/${currentUser!.uid}');
-        final uploadTask = storageRef.putFile(File(pickedFile.path));
-
-        final snapshot = await uploadTask.whenComplete(() {});
-        final downloadUrl = await snapshot.ref.getDownloadURL();
-
-        await _db.collection('users').doc(currentUser!.uid).update({
-          'profileImageUrl': downloadUrl,
-        });
-
-        return downloadUrl;
-      } else {
-        debugPrint("Resim seçilmedi.");
-        return null;
-      }
-    } catch (e) {
-      debugPrint("Profil fotoğrafı yüklenirken bir hata oluştu: $e");
-      return null;
-    }
   }
 
   Future<void> resetPassword(String email) async {

@@ -95,4 +95,9 @@ abstract class DertText {
   static String selectedMusic = "Seçili Müzik";
   static String accountInformation = "Hesap Bilgileri";
   static String profileEdit = "Profili Düzenle";
+  static String informationUpdate = "Bilgileri Güncelle";
+  static String changePassword = "ŞİFREMİ DEĞİŞTİR";
+  static String change = "DEĞİŞTİR";
+  static String changePasswordAlertDialog =
+      "Şifrenizi güncellemek istediğinize emin misiniz ?";
 }

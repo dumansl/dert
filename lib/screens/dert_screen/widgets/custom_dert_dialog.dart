@@ -1,4 +1,4 @@
-import 'package:dert/screens/dert_screen/widgets/custom_button.dart';
+import 'package:dert/screens/dert_screen/widgets/custom_dert_button.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 

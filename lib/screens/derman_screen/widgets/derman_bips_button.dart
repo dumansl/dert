@@ -1,9 +1,9 @@
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-class BipsButon extends StatelessWidget {
+class DermanBipsButon extends StatelessWidget {
   final int bips;
-  const BipsButon({super.key, required this.bips});
+  const DermanBipsButon({super.key, required this.bips});
 
   @override
   Widget build(BuildContext context) {

@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 
-class DertCard extends StatelessWidget {
+class DashboardDermanCard extends StatelessWidget {
   final DertModel dert;
+  final DermanModel derman;
   final Widget? topWidget;
   final Widget? bottomWidget;
   final double? width;
-  const DertCard({
+  const DashboardDermanCard({
     super.key,
     required this.dert,
     this.topWidget,
     this.bottomWidget,
     this.width,
+    required this.derman,
   });
 
   @override
@@ -53,14 +55,23 @@ class DertCard extends StatelessWidget {
                   ],
                   Text(
                     dert.content,
-                    style: DertTextStyle.roboto.t12w400white,
+                    style: DertTextStyle.roboto.t12w400grey,
                     textAlign: TextAlign.justify,
-                    maxLines: 6,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: ScreenPadding.padding16px),
+                    child: Text(derman.content,
+                        style: DertTextStyle.roboto.t12w400white,
+                        textAlign: TextAlign.justify,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis),
                   ),
                   if (bottomWidget != null) ...[
                     Padding(
-                      padding: EdgeInsets.only(top: ScreenPadding.padding8px),
+                      padding:
+                          EdgeInsets.only(bottom: ScreenPadding.padding8px),
                       child: bottomWidget,
                     )
                   ],

@@ -1,11 +1,12 @@
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/dert_circle_avatar.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/dashboard_circle_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool showScaffold;
@@ -61,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        DertCircleAvatar(
+        DashboardCircleAvatar(
           profileImageUrl: widget.user?.profileImageUrl,
           gender: widget.user!.gender,
           radius: 50,
@@ -213,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenPadding.padding70px),
-        child: DertButton(
+        child: DashboardDertButton(
           text: DertText.profileEdit,
           style: DertTextStyle.roboto.t16w400white,
           onPressed: () {

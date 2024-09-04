@@ -1,9 +1,9 @@
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-class AnswersButton extends StatelessWidget {
+class DertAnswersButton extends StatelessWidget {
   final int dermansLength;
-  const AnswersButton({
+  const DertAnswersButton({
     super.key,
     required this.dermansLength,
   });

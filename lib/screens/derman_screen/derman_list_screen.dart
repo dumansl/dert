@@ -1,12 +1,12 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/screens/dashboard_screen/widgets/derman_card.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../dashboard_screen/widgets/dert_appbar.dart';
+import 'widgets/derman_card.dart';
 
 class DermanListScreen extends StatelessWidget {
   final UserModel? user;
@@ -76,7 +76,7 @@ class DermanListScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: ScreenPadding.padding16px)
+                                  SizedBox(height: ScreenPadding.padding8px)
                                 ],
                               );
                             }

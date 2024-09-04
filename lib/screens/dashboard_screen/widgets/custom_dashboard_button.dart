@@ -1,15 +1,15 @@
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-class DashboardDertButton extends StatelessWidget {
+class CustomDashboardButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
-  final TextStyle style;
-  const DashboardDertButton({
+  final bool isLoading;
+  const CustomDashboardButton({
     super.key,
     required this.onPressed,
     required this.text,
-    required this.style,
+    this.isLoading = false,
   });
 
   @override
@@ -25,10 +25,14 @@ class DashboardDertButton extends StatelessWidget {
             ScreenUtil.getWidth(context), ScreenUtil.getHeight(context) * 0.07),
       ),
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: style,
-      ),
+      child: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Text(
+              text,
+              style: DertTextStyle.roboto.t20w500white,
+            ),
     );
   }
 }

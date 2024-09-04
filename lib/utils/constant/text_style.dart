@@ -20,9 +20,10 @@ class Typography {
   final TextStyle t16w400purple;
   final TextStyle t16w400white;
   final TextStyle t16w400lightPurple;
-  final TextStyle t14w500darkpurple;
   final TextStyle t14w700purple;
   final TextStyle t14w700white;
+  final TextStyle t14w500darkpurple;
+  final TextStyle t14w500white;
   final TextStyle t14w400white;
   final TextStyle t14w400purple;
   final TextStyle t12w700white;
@@ -127,6 +128,11 @@ class Typography {
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: DertColor.text.darkpurple,
+        ),
+        t14w500white = baseStyle.copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
         ),
         t14w400white = baseStyle.copyWith(
           fontSize: 14,

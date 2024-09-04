@@ -2,7 +2,7 @@ import 'package:dert/model/follow_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'dert_circle_avatar.dart';
+import 'dashboard_circle_avatar.dart';
 
 class FollowCard extends StatelessWidget {
   final FollowModel follow;
@@ -20,7 +20,7 @@ class FollowCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        DertCircleAvatar(
+        DashboardCircleAvatar(
           profileImageUrl: follow.profileImageUrl,
           gender: gender,
           radius: 25,

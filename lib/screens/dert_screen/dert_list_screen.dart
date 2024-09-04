@@ -1,8 +1,6 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/screens/dashboard_screen/widgets/answers_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/dert_card.dart';
+import 'package:dert/screens/dert_screen/widgets/dert_card.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
@@ -10,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../dashboard_screen/widgets/dert_appbar.dart';
+import 'widgets/dert_answers_button.dart';
+import 'widgets/dert_bips_button.dart';
 
 class DertListScreen extends StatelessWidget {
   final UserModel? user;
@@ -56,8 +56,8 @@ class DertListScreen extends StatelessWidget {
                             bottomWidget: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                BipsButon(bips: dert.bips),
-                                AnswersButton(
+                                DertBipsButon(bips: dert.bips),
+                                DertAnswersButton(
                                     dermansLength: dert.dermans.length),
                               ],
                             ),

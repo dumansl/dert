@@ -1,11 +1,11 @@
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-class DertCircleAvatar extends StatelessWidget {
+class DermanCircleAvatar extends StatelessWidget {
   final String? profileImageUrl;
   final String gender;
   final double radius;
-  const DertCircleAvatar({
+  const DermanCircleAvatar({
     super.key,
     required this.profileImageUrl,
     required this.gender,

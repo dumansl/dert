@@ -1,17 +1,18 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/screens/dashboard_screen/widgets/alert_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
-import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/dert_card.dart';
-import 'package:dert/screens/dashboard_screen/widgets/dert_circle_avatar.dart';
-import 'package:dert/screens/dert_screen/widgets/custom_dialog.dart';
+import 'package:dert/screens/derman_screen/widgets/derman_dialog.dart';
 import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'widgets/derman_alert_button.dart';
+import 'widgets/derman_bips_button.dart';
+import 'widgets/derman_circle_avatar.dart';
+import 'widgets/custom_derman_button.dart';
+import 'widgets/dermans_dert_card.dart';
 
 class DermanAddScreen extends StatefulWidget {
   final UserModel user;
@@ -42,7 +43,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
   }
 
   Future<void> _fetchUserData() async {
-    final userService = Provider.of<AuthService>(context, listen: false);
+    final userService = Provider.of<UserService>(context, listen: false);
     user = await userService.getUserById(widget.dert.userId);
     setState(() {});
   }
@@ -100,14 +101,14 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  AlertButton(size: IconSize.size24px, onPressed: () {}),
+                  DermanAlertButton(size: IconSize.size24px, onPressed: () {}),
                   Expanded(
-                    child: DertCard(
+                    child: DermansDertCard(
                       dert: widget.dert,
                       bottomWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BipsButon(bips: widget.dert.bips),
+                          DermanBipsButon(bips: widget.dert.bips),
                           user == null
                               ? const CircularProgressIndicator()
                               : Row(
@@ -117,7 +118,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                                       style: DertTextStyle.roboto.t14w700white,
                                     ),
                                     SizedBox(width: ScreenPadding.padding8px),
-                                    DertCircleAvatar(
+                                    DermanCircleAvatar(
                                       profileImageUrl: user!.profileImageUrl,
                                       gender: user!.gender,
                                       radius: 15,
@@ -155,11 +156,11 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                 ),
               ),
               SizedBox(height: ScreenPadding.padding24px),
-              DertButton(
+              CustomDermanButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    DialogUtils.showMyDialog(
+                    DermanDialogUtils.showMyDialog(
                         context, DertText.dermanSendApproval, _submitForm);
                   }
                   debugPrint(_derman);

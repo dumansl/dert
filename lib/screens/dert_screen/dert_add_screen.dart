@@ -1,8 +1,8 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
-import 'package:dert/screens/dert_screen/widgets/custom_button.dart';
-import 'package:dert/screens/dert_screen/widgets/custom_dialog.dart';
+import 'package:dert/screens/dert_screen/widgets/custom_dert_button.dart';
+import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';

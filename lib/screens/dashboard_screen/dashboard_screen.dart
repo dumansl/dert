@@ -5,13 +5,12 @@ import 'package:dert/services/dert_service.dart';
 import 'package:dert/services/shared_preferences_service.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dert/model/user_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/dert_circle_avatar.dart';
+import 'widgets/dashboard_circle_avatar.dart';
 
 class DashboardScreen extends StatefulWidget {
   final UserModel? user;
@@ -309,7 +308,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    DertCircleAvatar(
+                    DashboardCircleAvatar(
                       profileImageUrl: widget.user?.profileImageUrl,
                       gender: widget.user!.gender,
                       radius: 65,

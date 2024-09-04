@@ -1,8 +1,5 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/screens/dashboard_screen/widgets/answers_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/bips_button.dart';
-import 'package:dert/screens/dashboard_screen/widgets/derman_card.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
@@ -11,7 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../widgets/dert_card.dart';
+import '../widgets/dashboard_answers_button.dart';
+import '../widgets/dashboard_bips_button.dart';
+import '../widgets/dashboard_derman_card.dart';
+import '../widgets/dashboard_dert_card.dart';
 
 class UsersScreen extends StatefulWidget {
   final UserModel? user;
@@ -103,14 +103,15 @@ class _UsersScreenState extends State<UsersScreen> {
                       return Padding(
                         padding:
                             EdgeInsets.only(right: ScreenPadding.padding8px),
-                        child: DertCard(
+                        child: DashboardDertCard(
                           width: ScreenUtil.getWidth(context) * 0.76,
                           dert: dert,
                           bottomWidget: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              BipsButon(bips: dert.bips),
-                              AnswersButton(dermansLength: dert.dermans.length),
+                              DashboardBipsButton(bips: dert.bips),
+                              DashboardAnswersButton(
+                                  dermansLength: dert.dermans.length),
                             ],
                           ),
                         ),
@@ -193,7 +194,7 @@ class _UsersScreenState extends State<UsersScreen> {
                             return Padding(
                               padding: EdgeInsets.only(
                                   right: ScreenPadding.padding8px),
-                              child: DermanCard(
+                              child: DashboardDermanCard(
                                 width: ScreenUtil.getWidth(context) * 0.76,
                                 derman: derman,
                                 dert: dert,
