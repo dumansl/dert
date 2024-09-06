@@ -1,11 +1,11 @@
 class FollowModel {
-  final String id; // Belge ID'si
+  final String id;
   final String username;
   final String? profileImageUrl;
   final String? musicUrl;
 
   FollowModel({
-    required this.id, // ID zorunlu hale geldi
+    required this.id,
     required this.username,
     this.profileImageUrl,
     this.musicUrl,
@@ -13,7 +13,7 @@ class FollowModel {
 
   factory FollowModel.fromMap(String id, Map<String, dynamic> data) {
     return FollowModel(
-      id: id, // Firestore'dan gelen ID
+      id: id,
       username: data['username'] ?? '',
       profileImageUrl: data['profileImageUrl'],
       musicUrl: data['musicUrl'],
