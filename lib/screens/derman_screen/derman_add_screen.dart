@@ -17,6 +17,7 @@ import 'widgets/dermans_dert_card.dart';
 class DermanAddScreen extends StatefulWidget {
   final UserModel user;
   final DertModel dert;
+
   const DermanAddScreen({super.key, required this.dert, required this.user});
 
   @override
@@ -28,27 +29,16 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
   final formKey = GlobalKey<FormState>();
   String _derman = "";
 
-  UserModel? user;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
   @override
   void dispose() {
     _focusNode.dispose();
     super.dispose();
   }
 
-  Future<void> _fetchUserData() async {
-    final userService = Provider.of<UserService>(context, listen: false);
-    user = await userService.getUserById(widget.dert.userId);
-    setState(() {});
-  }
-
   void _submitForm() {
+    if (!formKey.currentState!.validate()) return;
+
+    formKey.currentState!.save();
     final derman = DermanModel(
       dertId: widget.dert.dertId!,
       isApproved: false,
@@ -85,6 +75,8 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userService = Provider.of<UserService>(context, listen: false);
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: DertAppbar(
@@ -103,30 +95,43 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                 children: [
                   DermanAlertButton(size: IconSize.size24px, onPressed: () {}),
                   Expanded(
-                    child: DermansDertCard(
-                      dert: widget.dert,
-                      bottomWidget: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          DermanBipsButon(bips: widget.dert.bips),
-                          user == null
-                              ? const CircularProgressIndicator()
-                              : Row(
-                                  children: [
-                                    Text(
-                                      "@${user!.username}",
-                                      style: DertTextStyle.roboto.t14w700white,
-                                    ),
-                                    SizedBox(width: ScreenPadding.padding8px),
-                                    DermanCircleAvatar(
-                                      profileImageUrl: user!.profileImageUrl,
-                                      gender: user!.gender,
-                                      radius: 15,
-                                    ),
-                                  ],
-                                ),
-                        ],
-                      ),
+                    child: StreamBuilder<UserModel?>(
+                      stream: userService.streamUserById(widget.dert.userId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return const Text('Kullanıcı bilgileri yüklenemedi');
+                        } else if (!snapshot.hasData || snapshot.data == null) {
+                          return const Text('Kullanıcı bulunamadı');
+                        }
+
+                        final user = snapshot.data!;
+                        return DermansDertCard(
+                          dert: widget.dert,
+                          bottomWidget: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DermanBipsButon(bips: widget.dert.bips),
+                              Row(
+                                children: [
+                                  Text(
+                                    "@${user.username}",
+                                    style: DertTextStyle.roboto.t14w700white,
+                                  ),
+                                  SizedBox(width: ScreenPadding.padding8px),
+                                  DermanCircleAvatar(
+                                    profileImageUrl: user.profileImageUrl,
+                                    gender: user.gender,
+                                    radius: 15,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -150,7 +155,6 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                     if (value == null || value.isEmpty) {
                       return DertText.dermanValidator;
                     }
-
                     return null;
                   },
                 ),
@@ -159,11 +163,9 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
               CustomDermanButton(
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    formKey.currentState!.save();
                     DermanDialogUtils.showMyDialog(
                         context, DertText.dermanSendApproval, _submitForm);
                   }
-                  debugPrint(_derman);
                 },
                 text: DertText.send,
                 style: DertTextStyle.roboto.t20w500white,

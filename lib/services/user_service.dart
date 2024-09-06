@@ -13,39 +13,35 @@ class UserService extends ChangeNotifier {
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
   FirebaseStorage get storage => FirebaseServiceProvider().storage;
 
-  Future<UserModel?> getUserById(String uid) async {
-    return handleErrors(
-      operation: () async {
-        debugPrint("Fetching user document with UID: $uid");
-        DocumentSnapshot<Map<String, dynamic>> userDoc =
-            await _db.collection("users").doc(uid).get();
-        debugPrint("User document fetched: ${userDoc.data()}");
-
-        if (userDoc.exists) {
-          return UserModel.fromMap(userDoc.data()!, uid);
-        } else {
-          debugPrint("User document does not exist for UID: $uid");
-          return null;
-        }
-      },
-      onError: (e) {
-        debugPrint("Error fetching user data: $e");
-        throw Exception("Kullanıcı bilgilerini çekerken hata oluştu: $e");
-      },
-    );
+  Stream<UserModel?> streamUserById(String uid) {
+    return _db.collection("users").doc(uid).snapshots().map((snapshot) {
+      if (snapshot.exists) {
+        return UserModel.fromMap(snapshot.data()!, uid);
+      } else {
+        return null;
+      }
+    });
   }
 
-  Future<void> updateUserFields({
+  Future<void> updateUserProfile({
     required String userId,
-    required Map<String, dynamic> updatedFields,
+    required String firstName,
+    required String lastName,
+    required String username,
+    required String gender,
   }) async {
     return handleErrors(
       operation: () async {
-        await _db.collection('users').doc(userId).update(updatedFields);
+        await _db.collection('users').doc(userId).update({
+          'firstName': firstName,
+          'lastName': lastName,
+          'username': username,
+          'gender': gender,
+        });
         notifyListeners();
       },
       onError: (e) {
-        throw Exception("Kullanıcı bilgilerini güncelleme hatası: $e");
+        throw Exception("Profil güncellenirken hata oluştu: $e");
       },
     );
   }

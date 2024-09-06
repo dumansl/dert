@@ -34,7 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       HomeScreen(user: widget.user),
       const DrendScreen(),
       const NotificationScreen(),
-      ProfileScreen(user: widget.user),
+      ProfileScreen(
+        userId: widget.user!.uid,
+      ),
     ];
   }
 
@@ -345,7 +347,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProfileScreen(
-                                showScaffold: true, user: widget.user),
+                              showScaffold: true,
+                              userId: widget.user!.uid,
+                            ),
                           ),
                         );
                       },

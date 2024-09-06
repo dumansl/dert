@@ -141,17 +141,21 @@ class AuthService extends ChangeNotifier {
     );
   }
 
-  Future<void> changePassword(
-      {required String currentPassword, required String newPassword}) async {
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
     return handleErrors(
       operation: () async {
         User? user = _auth.currentUser;
         if (user != null) {
+          // Kullanıcıyı yeniden kimlik doğrulaması için kimlik bilgileri
           final cred = EmailAuthProvider.credential(
             email: user.email!,
-            password: currentPassword,
+            password: currentPassword, // Buradaki şifre doğru mu kontrol et
           );
 
+          // Kullanıcıyı yeniden kimlik doğrulaması
           await user.reauthenticateWithCredential(cred);
           await user.updatePassword(newPassword);
           notifyListeners();
@@ -160,7 +164,8 @@ class AuthService extends ChangeNotifier {
       onError: (e) {
         if (e is FirebaseAuthException) {
           if (e.code == 'wrong-password') {
-            throw Exception("Mevcut şifre yanlış.");
+            throw Exception(
+                "Mevcut şifre yanlış."); // Bu mesaj hatayı açıklıyor
           } else {
             throw Exception("Şifre değiştirme hatası: ${e.message}");
           }

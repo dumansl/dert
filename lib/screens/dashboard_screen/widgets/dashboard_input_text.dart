@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class DashboardInputText extends StatelessWidget {
   final bool obscureText;
-  final String? initialValue;
+
   final String? labelText;
   final Widget? suffixIcon;
   final Color? borderColor;
@@ -11,24 +11,25 @@ class DashboardInputText extends StatelessWidget {
   final void Function(String)? onChanged;
   final FormFieldValidator<String>? validator;
   final void Function(String?)? onSaved;
+  final TextEditingController? controller;
 
   const DashboardInputText({
     super.key,
     this.onChanged,
     this.validator,
-    this.initialValue,
     this.labelText,
     this.obscureText = false,
     this.suffixIcon,
     this.borderColor,
     this.style,
     this.onSaved,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      initialValue: initialValue,
+      controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
         suffixIcon: suffixIcon,

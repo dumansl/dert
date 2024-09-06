@@ -2,25 +2,55 @@ import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
 import 'package:dert/screens/screens.dart';
+import 'package:dert/services/user_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/dashboard_circle_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool showScaffold;
-  final UserModel? user;
+  final String userId;
   const ProfileScreen(
-      {super.key, this.showScaffold = false, required this.user});
+      {super.key, this.showScaffold = false, required this.userId});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late Stream<UserModel?> userStream;
+
+  @override
+  void initState() {
+    super.initState();
+    userStream = Provider.of<UserService>(context, listen: false)
+        .streamUserById(widget.userId);
+  }
+
   @override
   Widget build(BuildContext context) {
+    return StreamBuilder<UserModel?>(
+      stream: userStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator()); // Yüklenme göstergesi
+        } else if (snapshot.hasError) {
+          return const Center(
+              child: Text('Kullanıcı bilgilerini yüklerken hata oluştu'));
+        } else if (snapshot.hasData && snapshot.data != null) {
+          return _buildProfileScreen(context, snapshot.data!);
+        } else {
+          return const Center(child: Text('Kullanıcı bulunamadı'));
+        }
+      },
+    );
+  }
+
+  Widget _buildProfileScreen(BuildContext context, UserModel user) {
     if (widget.showScaffold) {
       return Scaffold(
         appBar: DertAppbar(
@@ -28,43 +58,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         body: Stack(
           children: [
-            _profile(context),
-            _editProfile(context),
+            _profile(context, user),
+            _editProfile(context, user),
           ],
         ),
       );
     } else {
       return Stack(
         children: [
-          _profile(context),
-          _editProfile(context),
+          _profile(context, user),
+          _editProfile(context, user),
         ],
       );
     }
   }
 
-  Widget _profile(BuildContext context) {
+  Widget _profile(BuildContext context, UserModel user) {
     return Column(
       children: [
         Expanded(
           flex: 50,
-          child: _profileHeader(context),
+          child: _profileHeader(context, user),
         ),
         Expanded(
           flex: 50,
-          child: _profileContent(context),
+          child: _profileContent(context, user),
         ),
       ],
     );
   }
 
-  Widget _profileHeader(BuildContext context) {
+  Widget _profileHeader(BuildContext context, UserModel user) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         DashboardCircleAvatar(
-          profileImageUrl: widget.user?.profileImageUrl,
-          gender: widget.user!.gender,
+          profileImageUrl: user.profileImageUrl,
+          gender: user.gender,
           radius: 50,
         ),
         SizedBox(height: ScreenPadding.padding16px),
@@ -76,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   createHorizontalPageRoute(
-                      FollowScreen(showFollowers: true, user: widget.user!)),
+                      FollowScreen(showFollowers: true, user: user)),
                 );
               },
               child: Text("\n${DertText.followers}",
@@ -88,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   createHorizontalPageRoute(
-                      FollowScreen(showFollowers: false, user: widget.user!)),
+                      FollowScreen(showFollowers: false, user: user)),
                 );
               },
               child: Text("\n${DertText.follows}",
@@ -97,13 +127,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
         SizedBox(height: ScreenPadding.padding16px),
-        Text("@${widget.user!.username}",
-            style: DertTextStyle.roboto.t24w400purple),
+        Text("@${user.username}", style: DertTextStyle.roboto.t24w400purple),
       ],
     );
   }
 
-  Widget _profileContent(BuildContext context) {
+  Widget _profileContent(BuildContext context, UserModel user) {
     return Container(
       padding: EdgeInsets.only(
         left: ScreenPadding.padding24px,
@@ -122,7 +151,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context,
               isMusic: true,
               header: DertText.selectedMusic,
-              content: "Müslüm Gürses - Yakarsa Dünyayı Garipler Yakar",
+              content:
+                  "Müslüm Gürses - Yakarsa Dünyayı Garipler Yakar", // Burada kullanıcının müzik verisini kullanabilirsin
               logoPath: ImagePath.spotifyLogo,
             ),
             SizedBox(height: ScreenPadding.padding8px),
@@ -132,21 +162,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _infoContent(
               context,
               header: DertText.registerUserName,
-              content: "@${widget.user!.username}",
+              content: "@${user.username}",
               logoPath: ImagePath.userLogo,
             ),
             SizedBox(height: ScreenPadding.padding8px),
             _infoContent(
               context,
               header: DertText.registerEmail,
-              content: widget.user!.email,
+              content: user.email,
               logoPath: ImagePath.emailLogo,
             ),
             SizedBox(height: ScreenPadding.padding8px),
             _infoContent(
               context,
               header: DertText.registerGender,
-              content: widget.user!.gender,
+              content: user.gender,
               logoPath: ImagePath.genderLogo,
             ),
           ],
@@ -210,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _editProfile(BuildContext context) {
+  Widget _editProfile(BuildContext context, UserModel user) {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: ScreenPadding.padding70px),
@@ -221,9 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfileScreen(
-                  user: widget.user!,
-                ),
+                builder: (context) => EditProfileScreen(user: user),
               ),
             );
           },
