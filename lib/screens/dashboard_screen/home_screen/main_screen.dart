@@ -1,71 +1,57 @@
 import 'package:dert/model/dert_model.dart';
-import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dashboard_answers_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dashboard_bips_button.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dashboard_dert_card.dart';
 import 'package:dert/services/dert_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MainScreen extends StatefulWidget {
-  final UserModel? user;
-  const MainScreen({
-    super.key,
-    required this.user,
-  });
+class MainScreen extends StatelessWidget {
+  final String userId;
 
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  late Stream<List<DertModel>> followedDertsStream;
-
-  @override
-  void initState() {
-    super.initState();
-    followedDertsStream = Provider.of<DertService>(context, listen: false)
-        .streamFollowedUsersDerts(widget.user!.uid);
-  }
+  const MainScreen({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
+    final dertService = Provider.of<DertService>(context);
     return Padding(
-      padding: EdgeInsets.all(ScreenPadding.padding16px),
+      padding: EdgeInsets.all(ScreenPadding.padding8px),
       child: StreamBuilder<List<DertModel>>(
-        stream: followedDertsStream,
+        stream: dertService.getFollowedDerts(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Hata: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: _mainEmpty(context));
-          } else {
-            final derts = snapshot.data!;
-
-            return ListView.builder(
-              itemCount: derts.length,
-              itemBuilder: (context, index) {
-                final dert = derts[index];
-
-                return Card(
-                  margin: const EdgeInsets.all(8),
-                  child: ListTile(
-                    title: Text(dert.content),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Bips: ${dert.bips}'),
-                        Text('Kapalı mı?: ${dert.isClosed ? 'Evet' : 'Hayır'}'),
-                      ],
-                    ),
-                    onTap: () {
-                      // Dert detaylarına gitmek için tıklama işlevi ekleyin.
-                    },
-                  ),
-                );
-              },
-            );
           }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return _mainEmpty(context);
+          }
+
+          final derts = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: derts.length,
+            itemBuilder: (context, index) {
+              final dert = derts[index];
+              return Padding(
+                padding:
+                    EdgeInsets.symmetric(vertical: ScreenPadding.padding4px),
+                child: DashboardDertCard(
+                  width: ScreenUtil.getWidth(context) * 0.76,
+                  dert: dert,
+                  bottomWidget: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DashboardBipsButton(bips: dert.bips),
+                      DashboardAnswersButton(
+                          dermansLength: dert.dermans.length),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
     );

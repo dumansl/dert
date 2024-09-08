@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:dert/model/dert_model.dart';
-import 'package:dert/model/follow_model.dart';
 import 'package:dert/services/firebase_service_provider.dart';
 import 'package:dert/services/handler_errors.dart';
 import 'package:flutter/material.dart';
@@ -135,34 +134,26 @@ class DertService with ChangeNotifier {
     }
   }
 
-  Stream<List<DertModel>> streamFollowedUsersDerts(String userId) async* {
-    Stream<List<FollowModel>> followedUsersStream = _db
+  Stream<List<DertModel>> getFollowedDerts(String userId) {
+    return _db
         .collection('users')
         .doc(userId)
         .collection('follows')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => FollowModel.fromMap(doc.id, doc.data()))
-            .toList());
-    await for (List<FollowModel> followedUsers in followedUsersStream) {
-      List<DertModel> allDerts = [];
+        .asyncExpand((followedSnapshot) {
+      List<String> followedIds =
+          followedSnapshot.docs.map((doc) => doc.id).toList();
 
-      for (FollowModel followedUser in followedUsers) {
-        var dertsStream = _db
-            .collection('users')
-            .doc(followedUser.id)
-            .collection('my_derts')
-            .snapshots()
-            .map((snapshot) => snapshot.docs
-                .map((doc) => DertModel.fromFirestore(doc))
-                .toList());
-
-        await for (List<DertModel> derts in dertsStream) {
-          allDerts.addAll(derts);
-        }
-      }
-      notifyListeners();
-      yield allDerts;
-    }
+      return _db
+          .collection('derts')
+          .where('userId', whereIn: followedIds)
+          .where('isClosed', isEqualTo: false)
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
+          return DertModel.fromFirestore(doc);
+        }).toList();
+      });
+    });
   }
 }
