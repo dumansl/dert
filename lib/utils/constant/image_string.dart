@@ -6,6 +6,7 @@ abstract class ImagePath {
   static const String loginBackground = "assets/images/login_screen.webp";
   static const String logo = "assets/images/logo.webp";
   static const String dertLogo = "assets/images/logo/dert_logo.webp";
+  static const String dertLogov2 = "assets/images/logo/dert_logo_v2.webp";
   static const String homeLogo = "assets/images/logo/home_logo.webp";
   static const String userLogo = "assets/images/logo/user_logo.webp";
   static const String warningLogo = "assets/images/logo/warning_logo.webp";

@@ -31,6 +31,8 @@ class UserModel extends HiveObject {
   @HiveField(8)
   final String? musicUrl;
 
+  final int? points;
+
   UserModel({
     required this.uid,
     required this.email,
@@ -41,6 +43,7 @@ class UserModel extends HiveObject {
     required this.gender,
     required this.birthdate,
     this.musicUrl,
+    this.points,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
@@ -54,6 +57,7 @@ class UserModel extends HiveObject {
       gender: map['gender'] ?? '',
       birthdate: map['birthdate'] ?? 0,
       musicUrl: map['musicUrl'] ?? "",
+      points: map['points'] ?? 0,
     );
   }
 
@@ -72,6 +76,7 @@ class UserModel extends HiveObject {
       'gender': gender,
       'birthdate': birthdate,
       'musicUrl': musicUrl,
+      'points': points,
     };
   }
 }
