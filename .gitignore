@@ -60,3 +60,5 @@ ios/**/Profile/*.mobileprovision
 
 #Firebase 
 firebase_options.dart
+
+/assets/
