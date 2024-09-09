@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 
 class DertAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final Color backgroundColor;
   const DertAppbar({
     super.key,
     required this.title,
+    this.backgroundColor = Colors.white,
   });
 
   @override
@@ -21,7 +23,6 @@ class DertAppbar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.arrow_back, color: DertColor.icon.darkpurple),
       ),
       elevation: 0.0,
-      backgroundColor: Colors.white,
       iconTheme: IconThemeData(
         color: DertColor.icon.darkpurple,
       ),
