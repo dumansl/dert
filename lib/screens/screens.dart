@@ -16,3 +16,4 @@ export 'derman_screen/derman_add_screen.dart';
 export 'dashboard_screen/profile_screen/follows_screen.dart';
 export 'dashboard_screen/profile_screen/edit_profile_screen.dart';
 export 'derman_screen/derman_details_screen.dart';
+export 'dert_screen/dert_details_screen.dart';
