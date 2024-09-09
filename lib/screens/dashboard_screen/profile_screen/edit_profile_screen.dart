@@ -62,15 +62,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       String currentPassword, String newPassword) async {
     try {
       final authService = Provider.of<AuthService>(context, listen: false);
-      authService.changePassword(
-        currentPassword: currentPassword,
-        newPassword: newPassword,
-      );
+
+      await authService.changePassword(
+          currentPassword: currentPassword, newPassword: newPassword);
+
       snackBar(context, "Şifre başarıyla değiştirildi.",
           bgColor: DertColor.state.success);
+
+      _passwordController.clear();
+      _newPasswordController.clear();
+      _confirmPasswordController.clear();
     } catch (e) {
-      snackBar(context, "Şifre değiştirme hatası: $e",
-          bgColor: DertColor.state.error);
+      snackBar(
+        context,
+        "Şifre değiştirme hatası: $e",
+        bgColor: DertColor.state.error,
+      );
     }
   }
 
@@ -269,7 +276,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Container _changePasswordContent(BuildContext context) {
+  Widget _changePasswordContent(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -286,6 +293,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           const SizedBox(height: 16),
           DashboardInputText(
             labelText: DertText.oldPassword,
+            controller: _passwordController,
             suffixIcon: IconButton(
               icon: Icon(
                 _showPassword ? Icons.visibility : Icons.visibility_off,
@@ -305,9 +313,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               return null;
             },
-            onSaved: (newValue) {
-              _passwordController.text = newValue!;
-            },
             obscureText: !_showPassword,
             borderColor: Colors.white,
             style: DertTextStyle.roboto.t14w500white,
@@ -315,6 +320,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           const SizedBox(height: 16),
           DashboardInputText(
             labelText: DertText.newPassword,
+            controller: _newPasswordController,
             suffixIcon: IconButton(
               icon: Icon(
                 _showPassword2 ? Icons.visibility : Icons.visibility_off,
@@ -334,9 +340,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               return null;
             },
-            onSaved: (newValue) {
-              _newPasswordController.text = newValue!;
-            },
             obscureText: !_showPassword2,
             borderColor: Colors.white,
             style: DertTextStyle.roboto.t14w500white,
@@ -344,6 +347,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           const SizedBox(height: 16),
           DashboardInputText(
             labelText: DertText.confirmPassword,
+            controller: _confirmPasswordController,
             suffixIcon: IconButton(
               icon: Icon(
                 _showPassword3 ? Icons.visibility : Icons.visibility_off,
@@ -358,11 +362,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return DertText.passwordAgain;
+              } else if (value != _newPasswordController.text) {
+                return DertText.registerConfirmPasswordError;
               }
               return null;
-            },
-            onSaved: (newValue) {
-              _confirmPasswordController.text = newValue!;
             },
             obscureText: !_showPassword3,
             borderColor: Colors.white,

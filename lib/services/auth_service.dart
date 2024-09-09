@@ -149,23 +149,26 @@ class AuthService extends ChangeNotifier {
       operation: () async {
         User? user = _auth.currentUser;
         if (user != null) {
-          // Kullanıcıyı yeniden kimlik doğrulaması için kimlik bilgileri
           final cred = EmailAuthProvider.credential(
             email: user.email!,
-            password: currentPassword, // Buradaki şifre doğru mu kontrol et
+            password: currentPassword,
           );
-
-          // Kullanıcıyı yeniden kimlik doğrulaması
           await user.reauthenticateWithCredential(cred);
           await user.updatePassword(newPassword);
           notifyListeners();
+        } else {
+          throw Exception("Kullanıcı oturumu bulunamadı.");
         }
       },
       onError: (e) {
         if (e is FirebaseAuthException) {
           if (e.code == 'wrong-password') {
+            throw Exception("Mevcut şifre yanlış.");
+          } else if (e.code == 'weak-password') {
+            throw Exception("Yeni şifre çok zayıf.");
+          } else if (e.code == 'requires-recent-login') {
             throw Exception(
-                "Mevcut şifre yanlış."); // Bu mesaj hatayı açıklıyor
+                "Şifreyi değiştirmek için oturumu yeniden açmanız gerekiyor.");
           } else {
             throw Exception("Şifre değiştirme hatası: ${e.message}");
           }
