@@ -128,7 +128,8 @@ class _UsersScreenState extends State<UsersScreen> {
             iconPressed: () async {
               final dertService =
                   Provider.of<DertService>(context, listen: false);
-              DertModel? dert = await dertService.findRandomDert();
+              DertModel? dert =
+                  await dertService.findRandomDert(widget.user!.uid);
               if (dert != null) {
                 Navigator.of(context).push(
                   MaterialPageRoute(

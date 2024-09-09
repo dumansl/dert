@@ -2,6 +2,8 @@ import 'package:dert/model/user_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'home_derman_screen.dart';
+import 'home_dert_screen.dart';
 import 'main_screen.dart';
 import 'users_screen.dart';
 
@@ -18,7 +20,51 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: UsersScreen(user: widget.user),
+      body: DefaultTabController(
+          length: 2,
+          child: Padding(
+            padding: EdgeInsets.all(ScreenPadding.padding8px),
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeRadius.radius5px),
+                    color: DertColor.card.purple,
+                  ),
+                  child: TabBar(
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                      color: DertColor.card.purpleWithOpacity,
+                      borderRadius: BorderRadius.circular(SizeRadius.radius5px),
+                    ),
+                    tabs: [
+                      Tab(
+                        icon: Text(
+                          DertText.dert,
+                          style: DertTextStyle.roboto.t16w500white,
+                        ),
+                      ),
+                      Tab(
+                        icon: Text(
+                          DertText.derman,
+                          style: DertTextStyle.roboto.t16w500white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      HomeDertScreen(user: widget.user!),
+                      HomeDermanScreen(user: widget.user),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 

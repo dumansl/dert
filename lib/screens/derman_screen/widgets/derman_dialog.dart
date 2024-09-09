@@ -35,9 +35,11 @@ class DermanDialogUtils {
             Align(
               alignment: Alignment.centerRight,
               child: CustomDermanButton(
-                text: DertText.send,
                 onPressed: onPressed,
-                style: DertTextStyle.roboto.t20w500white,
+                child: Text(
+                  DertText.send,
+                  style: DertTextStyle.roboto.t20w500white,
+                ),
               ),
             )
           ],

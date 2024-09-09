@@ -106,4 +106,6 @@ abstract class DertText {
   static String passwordPlease = 'Lütfen bir şifre girin';
   static String passwordCharachter = 'Şifreniz en az 6 karakter olmalıdır';
   static String passwordAgain = 'Lütfen şifrenizi tekrar girin';
+  static String mix = '🔀KARIŞTIR';
+  static String bip = 'BİP';
 }

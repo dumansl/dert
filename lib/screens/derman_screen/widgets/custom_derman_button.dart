@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 
 class CustomDermanButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String text;
-  final TextStyle style;
+  final Widget child;
+
   const CustomDermanButton({
     super.key,
     required this.onPressed,
-    required this.text,
-    required this.style,
+    required this.child,
   });
 
   @override
@@ -25,10 +24,7 @@ class CustomDermanButton extends StatelessWidget {
             ScreenUtil.getWidth(context), ScreenUtil.getHeight(context) * 0.07),
       ),
       onPressed: onPressed,
-      child: Text(
-        text,
-        style: style,
-      ),
+      child: child,
     );
   }
 }

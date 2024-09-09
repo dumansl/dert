@@ -8,7 +8,6 @@ import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/derman_bips_button.dart';
 import 'widgets/derman_circle_avatar.dart';
 import 'widgets/custom_derman_button.dart';
 import 'widgets/dermans_dert_card.dart';
@@ -24,15 +23,8 @@ class DermanAddScreen extends StatefulWidget {
 }
 
 class _DermanAddScreenState extends State<DermanAddScreen> {
-  final FocusNode _focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
   String _derman = "";
-
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
-  }
 
   void _submitForm() {
     if (!formKey.currentState!.validate()) return;
@@ -77,7 +69,6 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
     final userService = Provider.of<UserService>(context, listen: false);
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       appBar: DertAppbar(
         title: DertText.derman,
       ),
@@ -86,93 +77,141 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
         child: Form(
           key: formKey,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // DermanAlertButton(size: IconSize.size24px, onPressed: () {}),
-                  Expanded(
-                    child: StreamBuilder<UserModel?>(
-                      stream: userService.streamUserById(widget.dert.userId),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return const Text('Kullanıcı bilgileri yüklenemedi');
-                        } else if (!snapshot.hasData || snapshot.data == null) {
-                          return const Text('Kullanıcı bulunamadı');
-                        }
-
-                        final user = snapshot.data!;
-                        return DermansDertCard(
-                          dert: widget.dert,
-                          bottomWidget: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DermanBipsButon(bips: widget.dert.bips),
-                              Row(
-                                children: [
-                                  Text(
-                                    "@${user.username}",
-                                    style: DertTextStyle.roboto.t14w700white,
-                                  ),
-                                  SizedBox(width: ScreenPadding.padding8px),
-                                  DermanCircleAvatar(
-                                    profileImageUrl: user.profileImageUrl,
-                                    gender: user.gender,
-                                    radius: 15,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: TextFormField(
-                  autofocus: true,
-                  focusNode: _focusNode,
-                  decoration: InputDecoration(
-                    labelText: DertText.toBeDerman.toUpperCase(),
-                    isDense: true,
-                    labelStyle: DertTextStyle.roboto.t20w500darkpurple,
-                    border: InputBorder.none,
-                  ),
-                  maxLines: 7,
-                  maxLength: 280,
-                  onSaved: (newValue) {
-                    _derman = newValue!;
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return DertText.dermanValidator;
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              SizedBox(height: ScreenPadding.padding24px),
-              CustomDermanButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    DermanDialogUtils.showMyDialog(
-                        context, DertText.dermanSendApproval, _submitForm);
-                  }
-                },
-                text: DertText.send,
-                style: DertTextStyle.roboto.t20w500white,
-              ),
+              _dertContent(userService),
+              _addDerman(context),
+              _otherOptions(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _dertContent(UserService userService) {
+    return Row(
+      children: [
+        Expanded(
+          child: StreamBuilder<UserModel?>(
+            stream: userService.streamUserById(widget.dert.userId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return const Text('Kullanıcı bilgileri yüklenemedi');
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return const Text('Kullanıcı bulunamadı');
+              }
+
+              final user = snapshot.data!;
+              return DermansDertCard(
+                dert: widget.dert,
+                bottomWidget: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "@${user.username}",
+                      style: DertTextStyle.roboto.t14w700white,
+                    ),
+                    SizedBox(width: ScreenPadding.padding8px),
+                    DermanCircleAvatar(
+                      profileImageUrl: user.profileImageUrl,
+                      gender: user.gender,
+                      radius: 15,
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _addDerman(BuildContext context) {
+    return Column(
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: DertText.toBeDerman.toUpperCase(),
+            labelStyle: DertTextStyle.roboto.t20w500darkpurple,
+            border: InputBorder.none,
+          ),
+          maxLines: 7,
+          maxLength: 280,
+          onSaved: (newValue) {
+            _derman = newValue!;
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return DertText.dermanValidator;
+            }
+            return null;
+          },
+        ),
+        SizedBox(height: ScreenPadding.padding8px),
+        CustomDermanButton(
+          onPressed: () {
+            if (formKey.currentState!.validate()) {
+              DermanDialogUtils.showMyDialog(
+                  context, DertText.dermanSendApproval, _submitForm);
+            }
+          },
+          child: Text(
+            DertText.send,
+            style: DertTextStyle.roboto.t20w500white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _bipLogo() {
+    return Container(
+      height: IconSize.size30px,
+      width: IconSize.size30px,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(ImagePath.bipLogo),
+          fit: BoxFit.fill,
+        ),
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+
+  Widget _otherOptions() {
+    return Row(
+      children: [
+        Expanded(
+          child: CustomDermanButton(
+            onPressed: () {},
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _bipLogo(),
+                SizedBox(width: ScreenPadding.padding8px),
+                Text(
+                  DertText.bip,
+                  style: DertTextStyle.roboto.t20w500white,
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: ScreenPadding.padding16px),
+        Expanded(
+          child: CustomDermanButton(
+            onPressed: () {},
+            child: Text(
+              DertText.mix,
+              style: DertTextStyle.roboto.t20w500white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

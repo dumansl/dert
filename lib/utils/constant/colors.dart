@@ -41,6 +41,7 @@ class FrameColor {
   final Color error = const Color(0xFFFF0000);
   final Color warning = const Color(0xFFEBD514);
   final Color success = const Color(0xFF24DA69);
+  final Color darkpurple = const Color(0xff1D0C2B);
   final Color white = Colors.white;
 }
 

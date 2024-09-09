@@ -65,10 +65,13 @@ class DertService with ChangeNotifier {
     }
   }
 
-  Future<DertModel?> findRandomDert() async {
+  Future<DertModel?> findRandomDert(String userId) async {
     return handleErrors(
       operation: () async {
-        QuerySnapshot dertSnapshot = await _db.collection('derts').get();
+        QuerySnapshot dertSnapshot = await _db
+            .collection('derts')
+            .where('userId', isNotEqualTo: userId)
+            .get();
 
         if (dertSnapshot.docs.isEmpty) {
           throw Exception("Hiç dert bulunamadı");
@@ -78,9 +81,9 @@ class DertService with ChangeNotifier {
         int randomIndex = random.nextInt(dertSnapshot.docs.length);
         DocumentSnapshot randomDertDoc = dertSnapshot.docs[randomIndex];
 
-        DertModel? derts = DertModel.fromFirestore(randomDertDoc);
+        DertModel? randomDert = DertModel.fromFirestore(randomDertDoc);
 
-        return derts;
+        return randomDert;
       },
       onError: (e) {
         throw Exception("Rastgele dert bulma hatası: $e");
