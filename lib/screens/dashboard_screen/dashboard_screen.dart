@@ -33,7 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _pages = [
       HomeScreen(user: widget.user),
       const DrendScreen(),
-      const NotificationScreen(),
+      // const NotificationScreen(),
       ProfileScreen(
         userId: widget.user!.uid,
       ),
@@ -249,10 +249,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           label: '',
         ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_sharp),
-          label: '',
-        ),
+        // const BottomNavigationBarItem(
+        //   icon: Icon(Icons.notifications_sharp),
+        //   label: '',
+        // ),
         const BottomNavigationBarItem(
           icon: Icon(Icons.person_sharp),
           label: '',
@@ -380,31 +380,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         );
                       },
                     ),
-                    _drawerOption(
-                      assetName: ImagePath.notificationLogo,
-                      title: DertText.myNotifications,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const NotificationScreen(showScaffold: true),
-                          ),
-                        );
-                      },
-                    ),
-                    _drawerOption(
-                      assetName: ImagePath.phoneLogo,
-                      title: DertText.contact,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ContactScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                    // _drawerOption(
+                    //   assetName: ImagePath.notificationLogo,
+                    //   title: DertText.myNotifications,
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             const NotificationScreen(showScaffold: true),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    // _drawerOption(
+                    //   assetName: ImagePath.phoneLogo,
+                    //   title: DertText.contact,
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const ContactScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     _drawerOption(
                       assetName: ImagePath.logOutLogo,
                       title: DertText.logOut,

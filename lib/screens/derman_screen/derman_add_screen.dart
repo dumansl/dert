@@ -8,7 +8,6 @@ import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'widgets/derman_alert_button.dart';
 import 'widgets/derman_bips_button.dart';
 import 'widgets/derman_circle_avatar.dart';
 import 'widgets/custom_derman_button.dart';
@@ -93,7 +92,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  DermanAlertButton(size: IconSize.size24px, onPressed: () {}),
+                  // DermanAlertButton(size: IconSize.size24px, onPressed: () {}),
                   Expanded(
                     child: StreamBuilder<UserModel?>(
                       stream: userService.streamUserById(widget.dert.userId),

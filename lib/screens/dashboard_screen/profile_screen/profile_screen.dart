@@ -4,7 +4,6 @@ import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:dert/services/user_service.dart';
 import 'package:dert/utils/constant/constants.dart';
-import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -95,39 +94,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
         DashboardCircleAvatar(
           profileImageUrl: user.profileImageUrl,
           gender: user.gender,
-          radius: 50,
+          radius: 75,
         ),
+        // SizedBox(height: ScreenPadding.padding16px),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     InkWell(
+        //       onTap: () {
+        //         Navigator.push(
+        //           context,
+        //           createHorizontalPageRoute(
+        //               FollowScreen(showFollowers: true, user: user)),
+        //         );
+        //       },
+        //       child: Text("\n${DertText.followers}",
+        //           style: DertTextStyle.roboto.t14w400purple),
+        //     ),
+        //     SizedBox(width: ScreenPadding.padding24px),
+        //     InkWell(
+        //       onTap: () {
+        //         Navigator.push(
+        //           context,
+        //           createHorizontalPageRoute(
+        //               FollowScreen(showFollowers: false, user: user)),
+        //         );
+        //       },
+        //       child: Text("\n${DertText.follows}",
+        //           style: DertTextStyle.roboto.t14w400purple),
+        //     ),
+        //   ],
+        // ),
         SizedBox(height: ScreenPadding.padding16px),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  createHorizontalPageRoute(
-                      FollowScreen(showFollowers: true, user: user)),
-                );
-              },
-              child: Text("\n${DertText.followers}",
-                  style: DertTextStyle.roboto.t14w400purple),
-            ),
-            SizedBox(width: ScreenPadding.padding24px),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  createHorizontalPageRoute(
-                      FollowScreen(showFollowers: false, user: user)),
-                );
-              },
-              child: Text("\n${DertText.follows}",
-                  style: DertTextStyle.roboto.t14w400purple),
-            ),
-          ],
-        ),
-        SizedBox(height: ScreenPadding.padding16px),
-        Text("@${user.username}", style: DertTextStyle.roboto.t24w400purple),
+        Text("@${user.username}",
+            style: DertTextStyle.roboto.t24w600darkpurple),
       ],
     );
   }

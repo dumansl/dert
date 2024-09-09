@@ -96,16 +96,16 @@ class DermanListScreen extends StatelessWidget {
 
   Widget _dermanListBanner(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.filter_alt,
-            size: IconSize.size30px,
-            color: DertColor.icon.darkpurple,
-          ),
-        ),
+        // IconButton(
+        //   onPressed: () {},
+        //   icon: Icon(
+        //     Icons.filter_alt,
+        //     size: IconSize.size30px,
+        //     color: DertColor.icon.darkpurple,
+        //   ),
+        // ),
         IconButton(
           onPressed: () {
             // Navigator.of(context).push(

@@ -18,52 +18,56 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: Padding(
-            padding: EdgeInsets.all(ScreenPadding.padding8px),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(SizeRadius.radius5px),
-                    color: DertColor.card.purple,
-                  ),
-                  child: TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                      color: DertColor.card.purpleWithOpacity,
-                      borderRadius: BorderRadius.circular(SizeRadius.radius5px),
-                    ),
-                    tabs: [
-                      Tab(
-                        icon: Text(
-                          DertText.home,
-                          style: DertTextStyle.roboto.t16w500white,
-                        ),
-                      ),
-                      Tab(
-                        icon: Text(
-                          "@${widget.user!.username}",
-                          style: DertTextStyle.roboto.t16w500white,
-                        ),
-                      ),
-                    ],
-                  ),
+      body: UsersScreen(user: widget.user),
+    );
+  }
+
+  DefaultTabController _newMethod() {
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        body: Padding(
+          padding: EdgeInsets.all(ScreenPadding.padding8px),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeRadius.radius5px),
+                  color: DertColor.card.purple,
                 ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      MainScreen(user: widget.user!),
-                      UsersScreen(user: widget.user),
-                    ],
+                child: TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicator: BoxDecoration(
+                    color: DertColor.card.purpleWithOpacity,
+                    borderRadius: BorderRadius.circular(SizeRadius.radius5px),
                   ),
-                )
-              ],
-            ),
+                  tabs: [
+                    Tab(
+                      icon: Text(
+                        DertText.home,
+                        style: DertTextStyle.roboto.t16w500white,
+                      ),
+                    ),
+                    Tab(
+                      icon: Text(
+                        "@${widget.user!.username}",
+                        style: DertTextStyle.roboto.t16w500white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    MainScreen(user: widget.user!),
+                    UsersScreen(user: widget.user),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
