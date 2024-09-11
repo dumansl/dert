@@ -41,7 +41,6 @@ class MainScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final dert = derts[index];
 
-              // Kullanıcıyı `userId` ile çekmek
               return StreamBuilder<UserModel?>(
                 stream: userService.streamUserById(dert.userId),
                 builder: (context, userSnapshot) {
@@ -52,7 +51,7 @@ class MainScreen extends StatelessWidget {
                   final dertUser = userSnapshot.data;
 
                   if (dertUser == null) {
-                    return SizedBox(); // Kullanıcı verisi yoksa boş widget döndür
+                    return const SizedBox();
                   }
 
                   return Padding(
