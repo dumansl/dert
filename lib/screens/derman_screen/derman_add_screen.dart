@@ -1,9 +1,11 @@
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dashboard_bips_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/derman_screen/widgets/derman_dialog.dart';
 import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,11 +66,47 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
     });
   }
 
+  Future<void> _onBipPressed() async {
+    final dertService = Provider.of<DertService>(context, listen: false);
+    try {
+      await dertService.addBipToDert(widget.dert.dertId!);
+      final randomDert = await dertService.findRandomDert(widget.user.uid);
+      if (randomDert != null) {
+        Navigator.of(context).pushReplacement(createHorizontalPageRoute(
+          DermanAddScreen(
+            dert: randomDert,
+            user: widget.user,
+          ),
+        ));
+      }
+    } catch (error) {
+      debugPrint('Bip işlemi hatası: $error');
+    }
+  }
+
+  Future<void> _onMixPressed() async {
+    final dertService = Provider.of<DertService>(context, listen: false);
+    try {
+      final randomDert = await dertService.findRandomDert(widget.user.uid);
+      if (randomDert != null) {
+        Navigator.of(context).pushReplacement(createHorizontalPageRoute(
+          DermanAddScreen(
+            dert: randomDert,
+            user: widget.user,
+          ),
+        ));
+      }
+    } catch (error) {
+      debugPrint('Karıştır işlemi hatası: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context, listen: false);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: DertAppbar(
         title: DertText.derman,
       ),
@@ -79,9 +117,14 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _dertContent(userService),
-              _addDerman(context),
+              Column(
+                children: [
+                  _dertContent(userService),
+                  _addDerman(context),
+                ],
+              ),
               _otherOptions(),
+              SizedBox(height: ScreenPadding.padding8px),
             ],
           ),
         ),
@@ -108,17 +151,22 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
               return DermansDertCard(
                 dert: widget.dert,
                 bottomWidget: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "@${user.username}",
-                      style: DertTextStyle.roboto.t14w700white,
-                    ),
-                    SizedBox(width: ScreenPadding.padding8px),
-                    DermanCircleAvatar(
-                      profileImageUrl: user.profileImageUrl,
-                      gender: user.gender,
-                      radius: 15,
+                    DashboardBipsButton(bips: widget.dert.bips),
+                    Row(
+                      children: [
+                        Text(
+                          "@${user.username}",
+                          style: DertTextStyle.roboto.t14w700white,
+                        ),
+                        SizedBox(width: ScreenPadding.padding8px),
+                        DermanCircleAvatar(
+                          profileImageUrl: user.profileImageUrl,
+                          gender: user.gender,
+                          radius: 15,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -187,7 +235,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
       children: [
         Expanded(
           child: CustomDermanButton(
-            onPressed: () {},
+            onPressed: _onBipPressed,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -204,7 +252,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
         SizedBox(width: ScreenPadding.padding16px),
         Expanded(
           child: CustomDermanButton(
-            onPressed: () {},
+            onPressed: _onMixPressed,
             child: Text(
               DertText.mix,
               style: DertTextStyle.roboto.t20w500white,

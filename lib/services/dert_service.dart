@@ -159,4 +159,25 @@ class DertService with ChangeNotifier {
       });
     });
   }
+
+  Future<void> addBipToDert(String dertId) async {
+    return handleErrors(
+      operation: () async {
+        DocumentReference dertRef = _db.collection('derts').doc(dertId);
+        await _db.runTransaction((transaction) async {
+          DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
+          if (!dertSnapshot.exists) {
+            throw Exception("Dert bulunamadı!");
+          }
+
+          int currentBips = dertSnapshot.get('bips') ?? 0;
+          transaction.update(dertRef, {'bips': currentBips + 1});
+        });
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Bip ekleme hatası: $e");
+      },
+    );
+  }
 }

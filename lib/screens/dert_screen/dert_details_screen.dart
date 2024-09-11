@@ -1,10 +1,15 @@
 import 'package:dert/model/dert_model.dart';
+import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
+import 'package:dert/screens/derman_screen/widgets/derman_circle_avatar.dart';
+import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_answers_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_bips_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_details_derman_card.dart';
+import 'package:dert/services/user_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DertDetailsScreen extends StatelessWidget {
   final DertModel dert;
@@ -12,7 +17,8 @@ class DertDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(ScreenUtil.getHeight(context).toString());
+    final userService = Provider.of<UserService>(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: DertAppbar(
@@ -32,16 +38,33 @@ class DertDetailsScreen extends StatelessWidget {
                   horizontal: ScreenPadding.padding16px,
                   vertical: ScreenPadding.padding32px,
                 ),
-                child: Expanded(
-                  child: _dertContent(),
-                ),
+                child: _dertContent(),
               ),
             ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return DertDetailsDermanCard(derman: dert.dermans[index]);
+                final derman = dert.dermans[index];
+
+                return StreamBuilder<UserModel?>(
+                  stream: userService.streamUserById(derman.userId),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (userSnapshot.hasError || !userSnapshot.hasData) {
+                      return const Text("Kullanıcı bilgisi bulunamadı");
+                    }
+
+                    final dertUser = userSnapshot.data!;
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ScreenPadding.padding16px),
+                      child: _dermanContent(context, derman, dertUser),
+                    );
+                  },
+                );
               },
               childCount: dert.dermans.length,
             ),
@@ -51,13 +74,58 @@ class DertDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget _dermanContent(
+      BuildContext context, DermanModel derman, UserModel dertUser) {
+    return DertDetailsDermanCard(
+      derman: derman,
+      bottomWidget: Padding(
+        padding: EdgeInsets.only(top: ScreenPadding.padding8px),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () {
+                DertDialogUtils.showMyDialog(
+                  context,
+                  DertText.dermanisApproved,
+                  () {},
+                );
+              },
+              icon: Icon(
+                derman.isApproved ? Icons.favorite : Icons.favorite_border,
+                size: IconSize.size30px,
+                color: Colors.red,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  "@${dertUser.username}",
+                  style: DertTextStyle.roboto.t16w500white,
+                ),
+                SizedBox(width: ScreenPadding.padding8px),
+                DermanCircleAvatar(
+                  profileImageUrl: dertUser.profileImageUrl,
+                  gender: dertUser.gender,
+                  radius: 15,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _dertContent() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           dert.content,
           style: DertTextStyle.poppins.t14w400purple,
+          textAlign: TextAlign.justify,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

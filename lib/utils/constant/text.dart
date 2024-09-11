@@ -108,4 +108,6 @@ abstract class DertText {
   static String passwordAgain = 'Lütfen şifrenizi tekrar girin';
   static String mix = '🔀KARIŞTIR';
   static String bip = 'BİP';
+  static String dermanisApproved =
+      'Dermanı onaylamak istediğinize emin misiniz?';
 }

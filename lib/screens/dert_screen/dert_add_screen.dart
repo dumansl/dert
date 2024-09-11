@@ -114,7 +114,7 @@ class _DertAddScreenState extends State<DertAddScreen> {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    DialogUtils.showMyDialog(
+                    DertDialogUtils.showMyDialog(
                       context,
                       DertText.dertSendApproval,
                       _submitForm,
