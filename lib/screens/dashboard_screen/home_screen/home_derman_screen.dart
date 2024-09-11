@@ -49,26 +49,26 @@ class HomeDermanScreen extends StatelessWidget {
               ),
             ),
           _headerOptions(context),
-          Expanded(
-            child: StreamBuilder<List<DermanModel>>(
-              stream: dertService.streamDerman(user!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final dermans = snapshot.data ?? [];
+          StreamBuilder<List<DermanModel>>(
+            stream: dertService.streamDerman(user!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final dermans = snapshot.data ?? [];
 
-                  if (dermans.isEmpty) {
-                    return _usersEmptyCard(
-                      context,
-                      path: ImagePath.drawing2,
-                      text: DertText.usersEmptyDermanTitle,
-                    );
-                  }
+                if (dermans.isEmpty) {
+                  return _usersEmptyCard(
+                    context,
+                    path: ImagePath.drawing2,
+                    text: DertText.usersEmptyDermanTitle,
+                  );
+                }
 
-                  return ListView.builder(
+                return Expanded(
+                  child: ListView.builder(
                     itemCount: dermans.length,
                     itemBuilder: (context, index) {
                       final derman = dermans[index];
@@ -82,7 +82,10 @@ class HomeDermanScreen extends StatelessWidget {
                                 child: CircularProgressIndicator());
                           } else if (dertSnapshot.hasError ||
                               !dertSnapshot.hasData) {
-                            return const Text('Dert bulunamadı');
+                            return const Text(
+                              'Dert bulunamadı',
+                              style: TextStyle(color: Colors.white),
+                            );
                           }
                           final dert = dertSnapshot.data!;
                           return StreamBuilder<UserModel?>(
@@ -149,10 +152,10 @@ class HomeDermanScreen extends StatelessWidget {
                         },
                       );
                     },
-                  );
-                }
-              },
-            ),
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -210,6 +213,7 @@ class HomeDermanScreen extends StatelessWidget {
   Widget _usersEmptyCard(BuildContext context,
       {required String path, required String text}) {
     return Container(
+      height: ScreenUtil.getHeight(context) * 0.26,
       padding: EdgeInsets.symmetric(
           horizontal: ScreenPadding.padding16px,
           vertical: ScreenPadding.padding32px),

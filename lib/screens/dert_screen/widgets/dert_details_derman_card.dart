@@ -51,11 +51,11 @@ class DertDetailsDermanCard extends StatelessWidget {
                       child: topWidget,
                     )
                   ],
-                  Text(derman.content,
-                      style: DertTextStyle.roboto.t12w400white,
-                      textAlign: TextAlign.justify,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis),
+                  Text(
+                    derman.content,
+                    style: DertTextStyle.roboto.t12w400white,
+                    textAlign: TextAlign.justify,
+                  ),
                   if (bottomWidget != null) ...[
                     Padding(
                       padding:

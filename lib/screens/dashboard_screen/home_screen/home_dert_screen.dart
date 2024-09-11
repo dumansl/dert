@@ -41,23 +41,21 @@ class _HomeDertScreenState extends State<HomeDertScreen> {
         children: [
           _buildMusicButton(),
           _buildOptionTitle(context),
-          Expanded(
-            child: StreamBuilder<List<DertModel>>(
-              stream: dertProvider.streamDerts(widget.user!.uid),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final derts = snapshot.data ?? [];
-                  if (derts.isEmpty) {
-                    return _buildEmptyDertCard(context);
-                  }
-                  return _buildDertList(derts);
+          StreamBuilder<List<DertModel>>(
+            stream: dertProvider.streamDerts(widget.user!.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final derts = snapshot.data ?? [];
+                if (derts.isEmpty) {
+                  return _buildEmptyDertCard(context);
                 }
-              },
-            ),
+                return Expanded(child: _buildDertList(derts));
+              }
+            },
           ),
         ],
       ),
@@ -124,6 +122,7 @@ class _HomeDertScreenState extends State<HomeDertScreen> {
 
   Widget _buildEmptyDertCard(BuildContext context) {
     return Container(
+      height: ScreenUtil.getHeight(context) * 0.26,
       padding: EdgeInsets.symmetric(
         horizontal: ScreenPadding.padding16px,
         vertical: ScreenPadding.padding32px,

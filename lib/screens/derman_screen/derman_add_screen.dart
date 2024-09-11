@@ -69,7 +69,7 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
   Future<void> _onBipPressed() async {
     final dertService = Provider.of<DertService>(context, listen: false);
     try {
-      await dertService.addBipToDert(widget.dert.dertId!);
+      await dertService.addBipToDert(widget.dert.dertId!, widget.dert.userId);
       final randomDert = await dertService.findRandomDert(widget.user.uid);
       if (randomDert != null) {
         Navigator.of(context).pushReplacement(createHorizontalPageRoute(
@@ -81,6 +81,11 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
       }
     } catch (error) {
       debugPrint('Bip işlemi hatası: $error');
+      snackBar(
+        context,
+        'Bip işlemi sırasında hata oluştu.',
+        bgColor: Colors.red,
+      );
     }
   }
 

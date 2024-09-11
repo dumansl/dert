@@ -160,23 +160,88 @@ class DertService with ChangeNotifier {
     });
   }
 
-  Future<void> addBipToDert(String dertId) async {
+  Future<void> addBipToDert(String dertId, String userId) async {
     return handleErrors(
       operation: () async {
         DocumentReference dertRef = _db.collection('derts').doc(dertId);
+        DocumentReference userDertRef = _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_derts')
+            .doc(dertId);
+
         await _db.runTransaction((transaction) async {
           DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
           if (!dertSnapshot.exists) {
             throw Exception("Dert bulunamadı!");
           }
 
+          DocumentSnapshot userDertSnapshot =
+              await transaction.get(userDertRef);
+          if (!userDertSnapshot.exists) {
+            throw Exception("Kullanıcının derti bulunamadı!");
+          }
+
           int currentBips = dertSnapshot.get('bips') ?? 0;
+          int userCurrentBips = userDertSnapshot.get('bips') ?? 0;
+
           transaction.update(dertRef, {'bips': currentBips + 1});
+          transaction.update(userDertRef, {'bips': userCurrentBips + 1});
         });
+
         notifyListeners();
       },
       onError: (e) {
         throw Exception("Bip ekleme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> closeDertAndApproveDerman(
+      String dertId, String dermanId, String userId) async {
+    return handleErrors(
+      operation: () async {
+        DocumentReference dertRef = _db.collection('derts').doc(dertId);
+        DocumentReference userDertRef = _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_derts')
+            .doc(dertId);
+
+        await _db.runTransaction((transaction) async {
+          DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
+          if (!dertSnapshot.exists) {
+            throw Exception("Dert bulunamadı!");
+          }
+
+          DocumentSnapshot userDertSnapshot =
+              await transaction.get(userDertRef);
+          if (!userDertSnapshot.exists) {
+            throw Exception("Kullanıcının derti bulunamadı!");
+          }
+
+          transaction.update(dertRef, {'isClosed': true});
+          transaction.update(userDertRef, {'isClosed': true});
+
+          List<dynamic> dermans = dertSnapshot.get('dermans') ?? [];
+          dermans = dermans.map((dermanData) {
+            if (dermanData['dermanId'] == dermanId) {
+              return {
+                ...dermanData,
+                'isApproved': true,
+              };
+            }
+            return dermanData;
+          }).toList();
+
+          transaction.update(dertRef, {'dermans': dermans});
+          transaction.update(userDertRef, {'dermans': dermans});
+        });
+
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Dert ve Derman güncelleme hatası: $e");
       },
     );
   }

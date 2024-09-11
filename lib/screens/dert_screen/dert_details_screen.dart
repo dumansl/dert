@@ -2,7 +2,6 @@ import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/derman_screen/widgets/derman_circle_avatar.dart';
-import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_answers_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_bips_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_details_derman_card.dart';
@@ -14,6 +13,32 @@ import 'package:provider/provider.dart';
 class DertDetailsScreen extends StatelessWidget {
   final DertModel dert;
   const DertDetailsScreen({super.key, required this.dert});
+
+  // Future<void> _onCloseDert(
+  //   BuildContext context, {
+  //   required String dertId,
+  //   required String dermanId,
+  //   required String dertUserId,
+  // }) async {
+  //   try {
+  //     await Provider.of<DertService>(context, listen: false)
+  //         .closeDertAndApproveDerman(dertId, dermanId, dertUserId);
+
+  //     snackBar(context, "Derdinizi onayladınız.",
+  //         bgColor: DertColor.state.success);
+  //     // Navigator.push(
+  //     //   context,
+  //     //   MaterialPageRoute(
+  //     //     builder: (context) => DashboardScreen(user: user),
+  //     //   ),
+  //     // );
+  //   } catch (e) {
+  //     snackBar(
+  //       context,
+  //       "Bir hata oluştu: $e",
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +110,12 @@ class DertDetailsScreen extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                DertDialogUtils.showMyDialog(
-                  context,
-                  DertText.dermanisApproved,
-                  () {},
-                );
+                // _onCloseDert(
+                //   context,
+                //   dertId: dert.userId,
+                //   dermanId: derman.,
+                //   dertUserId: dert.userId,
+                // );
               },
               icon: Icon(
                 derman.isApproved ? Icons.favorite : Icons.favorite_border,

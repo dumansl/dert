@@ -52,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileScreen(BuildContext context, UserModel user) {
     if (widget.showScaffold) {
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: DertAppbar(
           title: DertText.profile,
         ),

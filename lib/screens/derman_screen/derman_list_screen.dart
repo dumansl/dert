@@ -126,43 +126,27 @@ class DermanListScreen extends StatelessWidget {
 
   Widget _dermanListEmpty(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.add_circle,
-              size: IconSize.size30px,
-              color: DertColor.icon.darkpurple,
+        Container(
+          height: ScreenUtil.getWidth(context) * 0.63,
+          width: ScreenUtil.getWidth(context) * 0.63,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(ImagePath.onboardImage3),
             ),
           ),
         ),
-        Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: ScreenUtil.getWidth(context) * 0.63,
-              width: ScreenUtil.getWidth(context) * 0.63,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(ImagePath.onboardImage3),
-                ),
-              ),
-            ),
-            SizedBox(height: ScreenPadding.padding16px),
-            SizedBox(
-              width: ScreenUtil.getWidth(context) * 0.6,
-              child: Text(
-                DertText.dermanListEmptyDertTitle,
-                textAlign: TextAlign.center,
-                style: DertTextStyle.roboto.t14w500darkpurple,
-              ),
-            ),
-          ],
-        ))
+        SizedBox(height: ScreenPadding.padding16px),
+        SizedBox(
+          width: ScreenUtil.getWidth(context) * 0.6,
+          child: Text(
+            DertText.dermanListEmptyDertTitle,
+            textAlign: TextAlign.center,
+            style: DertTextStyle.roboto.t14w500darkpurple,
+          ),
+        ),
       ],
     );
   }

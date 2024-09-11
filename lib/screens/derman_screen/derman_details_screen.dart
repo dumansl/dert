@@ -72,7 +72,7 @@ class DermanDetailsScreen extends StatelessWidget {
       width: IconSize.size30px,
       decoration: BoxDecoration(
         image: const DecorationImage(
-          image: const AssetImage(ImagePath.dertLogov2),
+          image: AssetImage(ImagePath.dertLogov2),
           fit: BoxFit.fill,
         ),
         shape: BoxShape.circle,
