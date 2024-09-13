@@ -1,9 +1,8 @@
 import 'package:dert/screens/derman_screen/widgets/derman_circle_avatar.dart';
-import 'package:dert/services/dert_service.dart';
+import 'package:dert/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/services/user_service.dart';
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dashboard_points_card.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dashboard_dert_card.dart';

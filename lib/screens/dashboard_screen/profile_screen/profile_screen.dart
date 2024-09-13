@@ -2,7 +2,7 @@ import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
 import 'package:dert/screens/screens.dart';
-import 'package:dert/services/user_service.dart';
+import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,8 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       stream: userStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator()); // Yüklenme göstergesi
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return const Center(
               child: Text('Kullanıcı bilgilerini yüklerken hata oluştu'));

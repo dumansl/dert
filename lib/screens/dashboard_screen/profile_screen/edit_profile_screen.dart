@@ -1,11 +1,10 @@
 import 'package:dert/screens/dashboard_screen/widgets/custom_dashboard_button.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dashboard_input_drop_down.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dashboard_input_text.dart';
-import 'package:dert/services/auth_service.dart';
+import 'package:dert/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dert/model/user_model.dart';
-import 'package:dert/services/user_service.dart';
 import 'package:dert/utils/constant/constants.dart';
 import 'package:dert/utils/snack_bar.dart';
 
