@@ -1,3 +1,4 @@
+import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +6,7 @@ import 'package:dert/model/dert_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 
 class DashboardDertCard extends StatelessWidget {
+  final UserModel user;
   final DertModel dert;
   final Widget? topWidget;
   final Widget? bottomWidget;
@@ -12,6 +14,7 @@ class DashboardDertCard extends StatelessWidget {
   const DashboardDertCard({
     super.key,
     required this.dert,
+    required this.user,
     this.topWidget,
     this.bottomWidget,
     this.width,
@@ -24,7 +27,7 @@ class DashboardDertCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DertDetailsScreen(dert: dert),
+              builder: (context) => DertDetailsScreen(dert: dert, user: user),
             ));
       },
       child: Container(

@@ -21,16 +21,10 @@ class HomeDertScreen extends StatefulWidget {
 }
 
 class _HomeDertScreenState extends State<HomeDertScreen> {
-  void _launchMusicUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      throw 'Could not launch $url';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final dertProvider = Provider.of<DertService>(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenPadding.padding4px,
@@ -53,13 +47,60 @@ class _HomeDertScreenState extends State<HomeDertScreen> {
                 if (derts.isEmpty) {
                   return _buildEmptyDertCard(context);
                 }
-                return Expanded(child: _buildDertList(derts));
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: derts.length,
+                    itemBuilder: (context, index) {
+                      final dert = derts[index];
+                      return FutureBuilder<List<DermanModel>>(
+                        future: dertProvider.getDermansForDert(dert.dertId!),
+                        builder: (context, dermanSnapshot) {
+                          if (dermanSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (dermanSnapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${dermanSnapshot.error}'));
+                          } else {
+                            final dermans = dermanSnapshot.data ?? [];
+                            return Column(
+                              children: [
+                                DashboardDertCard(
+                                  user: widget.user!,
+                                  dert: dert,
+                                  bottomWidget: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      DashboardBipsButton(bips: dert.bips),
+                                      DashboardAnswersButton(
+                                          dermansLength: dermans.length),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: ScreenPadding.padding8px),
+                              ],
+                            );
+                          }
+                        },
+                      );
+                    },
+                  ),
+                );
               }
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchMusicUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget _buildMusicButton() {
@@ -93,30 +134,6 @@ class _HomeDertScreenState extends State<HomeDertScreen> {
           onPressed: () => _navigateToAddDert(context),
         ),
       ],
-    );
-  }
-
-  Widget _buildDertList(List<DertModel> derts) {
-    return ListView.builder(
-      itemCount: derts.length,
-      itemBuilder: (context, index) {
-        final dert = derts[index];
-        return Column(
-          children: [
-            DashboardDertCard(
-              dert: dert,
-              bottomWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DashboardBipsButton(bips: dert.bips),
-                  DashboardAnswersButton(dermansLength: dert.dermans.length),
-                ],
-              ),
-            ),
-            SizedBox(height: ScreenPadding.padding8px),
-          ],
-        );
-      },
     );
   }
 

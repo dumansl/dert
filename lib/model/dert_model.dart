@@ -6,7 +6,6 @@ class DertModel {
   final bool isClosed;
   final String? selectedSolution;
   final int timestamp;
-  final List<DermanModel> dermans;
   final int bips;
   final String userId;
 
@@ -14,7 +13,6 @@ class DertModel {
     this.dertId,
     required this.content,
     required this.isClosed,
-    required this.dermans,
     required this.bips,
     required this.timestamp,
     this.selectedSolution,
@@ -24,18 +22,11 @@ class DertModel {
   factory DertModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
-    // `dermans` alanını kontrol ediyoruz. Eğer null ise boş bir liste atıyoruz.
-    final dermanList = (data['dermans'] as List<dynamic>?)
-            ?.map((item) => DermanModel.fromMap(item as Map<String, dynamic>))
-            .toList() ??
-        [];
-
     return DertModel(
       dertId: doc.id,
       userId: data['userId'] ?? '',
       content: data['content'] ?? '',
       isClosed: data['isClosed'] ?? false,
-      dermans: dermanList,
       bips: data['bips'] ?? 0,
       selectedSolution: data['selectedSolution'] ?? '',
       timestamp: data['timestamp'] ?? 0,
@@ -47,19 +38,14 @@ class DertModel {
       'userId': userId,
       'content': content,
       'isClosed': isClosed,
-      'derman': dermans.map((item) => item.toMap()).toList(),
       'bips': bips,
       'timestamp': timestamp,
     };
   }
-
-  @override
-  String toString() {
-    return 'DertModel(content: $content, isClosed: $isClosed, bips: $bips, derman: [${dermans.map((d) => d.toString()).join(', ')}])';
-  }
 }
 
 class DermanModel {
+  final String? dermanId;
   final String userId;
   final String dertId;
   final String content;
@@ -67,6 +53,7 @@ class DermanModel {
   final int timestamp;
 
   DermanModel({
+    this.dermanId,
     required this.userId,
     required this.dertId,
     required this.content,
@@ -74,13 +61,15 @@ class DermanModel {
     required this.timestamp,
   });
 
-  factory DermanModel.fromMap(Map<String, dynamic> map) {
+  factory DermanModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return DermanModel(
-      userId: map['userId'] ?? '',
-      dertId: map['dertId'] ?? '',
-      content: map['content'] ?? '',
-      isApproved: map['isApproved'] ?? false,
-      timestamp: map['timestamp'] ?? 0,
+      dermanId: doc.id,
+      userId: data['userId'] ?? '',
+      dertId: data['dertId'] ?? '',
+      content: data['derman'] ?? '',
+      isApproved: data['isApproved'] ?? false,
+      timestamp: data['timestamp'] ?? 0,
     );
   }
 
@@ -88,7 +77,7 @@ class DermanModel {
     return {
       'userId': userId,
       'dertId': dertId,
-      'content': content,
+      'derman': content,
       'isApproved': isApproved,
       'timestamp': timestamp,
     };

@@ -80,6 +80,7 @@ class MainScreen extends StatelessWidget {
                       ),
                       width: ScreenUtil.getWidth(context) * 0.76,
                       dert: dert,
+                      user: user,
                       bottomWidget: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -91,8 +92,25 @@ class MainScreen extends StatelessWidget {
                                 user: user,
                               ),
                               SizedBox(width: ScreenPadding.padding16px),
-                              DashboardAnswersButton(
-                                dermansLength: dert.dermans.length,
+                              FutureBuilder<List<DermanModel>>(
+                                future:
+                                    dertService.getDermansForDert(dert.dertId!),
+                                builder: (context, dermanSnapshot) {
+                                  if (dermanSnapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (dermanSnapshot.hasError) {
+                                    return Center(
+                                        child: Text(
+                                            'Error: ${dermanSnapshot.error}'));
+                                  } else {
+                                    final dermans = dermanSnapshot.data ?? [];
+                                    return DashboardAnswersButton(
+                                      dermansLength: dermans.length,
+                                    );
+                                  }
+                                },
                               ),
                             ],
                           ),

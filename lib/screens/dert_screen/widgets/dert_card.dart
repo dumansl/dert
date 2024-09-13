@@ -1,15 +1,18 @@
+import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/utils/constant/constants.dart';
 
 class DertCard extends StatelessWidget {
+  final UserModel user;
   final DertModel dert;
   final Widget? topWidget;
   final Widget? bottomWidget;
   final double? width;
   const DertCard({
     super.key,
+    required this.user,
     required this.dert,
     this.topWidget,
     this.bottomWidget,
@@ -23,7 +26,10 @@ class DertCard extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DertDetailsScreen(dert: dert),
+              builder: (context) => DertDetailsScreen(
+                dert: dert,
+                user: user,
+              ),
             ));
       },
       child: Container(

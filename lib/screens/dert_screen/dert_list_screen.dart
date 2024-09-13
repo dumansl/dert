@@ -48,20 +48,29 @@ class DertListScreen extends StatelessWidget {
                       itemCount: derts.length,
                       itemBuilder: (context, index) {
                         final dert = derts[index];
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(bottom: ScreenPadding.padding8px),
-                          child: DertCard(
-                            dert: dert,
-                            bottomWidget: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                DertBipsButon(bips: dert.bips),
-                                DertAnswersButton(
-                                    dermansLength: dert.dermans.length),
-                              ],
-                            ),
-                          ),
+                        return FutureBuilder<List<DermanModel>>(
+                          future: dertProvider.getDermansForDert(dert.dertId!),
+                          builder: (context, state) {
+                            final dermans = state.data ?? [];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                bottom: ScreenPadding.padding8px,
+                              ),
+                              child: DertCard(
+                                user: user!,
+                                dert: dert,
+                                bottomWidget: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    DertBipsButon(bips: dert.bips),
+                                    DertAnswersButton(
+                                        dermansLength: dermans.length),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),

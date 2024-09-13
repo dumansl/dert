@@ -103,17 +103,35 @@ class _UsersScreenState extends State<UsersScreen> {
                       return Padding(
                         padding:
                             EdgeInsets.only(right: ScreenPadding.padding8px),
-                        child: DashboardDertCard(
-                          width: ScreenUtil.getWidth(context) * 0.76,
-                          dert: dert,
-                          bottomWidget: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              DashboardBipsButton(bips: dert.bips),
-                              DashboardAnswersButton(
-                                  dermansLength: dert.dermans.length),
-                            ],
-                          ),
+                        child: FutureBuilder<List<DermanModel>>(
+                          future: dertProvider.getDermansForDert(dert.dertId!),
+                          builder: (context, dermanSnapshot) {
+                            if (dermanSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (dermanSnapshot.hasError) {
+                              return Center(
+                                  child: Text(
+                                      'Dermanları alma hatası: ${dermanSnapshot.error}'));
+                            } else {
+                              final dermans = dermanSnapshot.data ?? [];
+                              return DashboardDertCard(
+                                width: ScreenUtil.getWidth(context) * 0.76,
+                                dert: dert,
+                                user: widget.user!,
+                                bottomWidget: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    DashboardBipsButton(bips: dert.bips),
+                                    DashboardAnswersButton(
+                                        dermansLength: dermans.length),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
                         ),
                       );
                     },

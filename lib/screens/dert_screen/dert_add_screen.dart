@@ -29,7 +29,6 @@ class _DertAddScreenState extends State<DertAddScreen> {
     final newDert = DertModel(
       content: _dert,
       isClosed: _isClosed,
-      dermans: [],
       bips: _bip,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       userId: widget.user!.uid,

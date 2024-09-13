@@ -1,10 +1,9 @@
 import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/services/firebase_service_provider.dart';
 import 'package:dert/services/handler_errors.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DertService with ChangeNotifier {
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
@@ -23,8 +22,8 @@ class DertService with ChangeNotifier {
         }
       },
       onError: (e) {
-        debugPrint("Error fetching user data: $e");
-        throw Exception("Kullanıcı bilgilerini çekerken hata oluştu: $e");
+        debugPrint("Error fetching dert data: $e");
+        throw Exception("Dert bilgilerini çekerken hata oluştu: $e");
       },
     );
   }
@@ -91,29 +90,41 @@ class DertService with ChangeNotifier {
     );
   }
 
+  Future<List<DermanModel>> getDermansForDert(String dertId) async {
+    return handleErrors(
+      operation: () async {
+        QuerySnapshot dermanSnapshot = await _db
+            .collection('derts')
+            .doc(dertId)
+            .collection('dermans')
+            .get();
+
+        return dermanSnapshot.docs
+            .map((doc) => DermanModel.fromFirestore(doc))
+            .toList();
+      },
+      onError: (e) {
+        throw Exception("Dermanları alma hatası: $e");
+      },
+    );
+  }
+
   Future<void> addDermanToDert(
       String userId, DertModel dert, DermanModel derman) async {
     return handleErrors(
       operation: () async {
-        dert.dermans.add(derman);
-
         await _db
             .collection('derts')
             .doc(dert.dertId)
-            .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
-
-        await _db
-            .collection('users')
-            .doc(dert.userId)
-            .collection('my_derts')
-            .doc(dert.dertId)
-            .update({'dermans': dert.dermans.map((d) => d.toMap()).toList()});
+            .collection('dermans')
+            .add(derman.toMap());
 
         await _db
             .collection('users')
             .doc(userId)
             .collection('my_dermans')
             .add(derman.toMap());
+
         notifyListeners();
       },
       onError: (e) {
@@ -122,19 +133,15 @@ class DertService with ChangeNotifier {
     );
   }
 
-  Stream<List<DermanModel>> streamDerman(String userId) {
-    try {
-      return _db
-          .collection('users')
-          .doc(userId)
-          .collection('my_dermans')
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => DermanModel.fromMap(doc.data()))
-              .toList());
-    } catch (e) {
-      throw Exception("Dertleri akışa alma hatası: $e");
-    }
+  Stream<List<DermanModel>> streamDerman(String dertId) {
+    return _db
+        .collection('derts')
+        .doc(dertId)
+        .collection('dermans')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => DermanModel.fromFirestore(doc))
+            .toList());
   }
 
   Stream<List<DertModel>> getFollowedDerts(String userId) {
@@ -202,40 +209,19 @@ class DertService with ChangeNotifier {
     return handleErrors(
       operation: () async {
         DocumentReference dertRef = _db.collection('derts').doc(dertId);
-        DocumentReference userDertRef = _db
-            .collection('users')
-            .doc(userId)
-            .collection('my_derts')
-            .doc(dertId);
+        DocumentReference dermanRef =
+            dertRef.collection('dermans').doc(dermanId);
 
         await _db.runTransaction((transaction) async {
           DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
-          if (!dertSnapshot.exists) {
-            throw Exception("Dert bulunamadı!");
-          }
+          DocumentSnapshot dermanSnapshot = await transaction.get(dermanRef);
 
-          DocumentSnapshot userDertSnapshot =
-              await transaction.get(userDertRef);
-          if (!userDertSnapshot.exists) {
-            throw Exception("Kullanıcının derti bulunamadı!");
+          if (!dertSnapshot.exists || !dermanSnapshot.exists) {
+            throw Exception("Dert veya derman bulunamadı!");
           }
 
           transaction.update(dertRef, {'isClosed': true});
-          transaction.update(userDertRef, {'isClosed': true});
-
-          List<dynamic> dermans = dertSnapshot.get('dermans') ?? [];
-          dermans = dermans.map((dermanData) {
-            if (dermanData['dermanId'] == dermanId) {
-              return {
-                ...dermanData,
-                'isApproved': true,
-              };
-            }
-            return dermanData;
-          }).toList();
-
-          transaction.update(dertRef, {'dermans': dermans});
-          transaction.update(userDertRef, {'dermans': dermans});
+          transaction.update(dermanRef, {'isApproved': true});
         });
 
         notifyListeners();
