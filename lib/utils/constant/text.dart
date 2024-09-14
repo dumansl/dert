@@ -77,6 +77,8 @@ abstract class DertText {
   static String shareDertTitle = "DERDİNİZİ PAYLAŞIN";
   static String dertSendApproval =
       "Derdinizi göndermek istediğinize emin misiniz ?";
+  static String dertDeleteApproval =
+      "Derdinizi silmek istediğinize emin misiniz ?";
   static String dermanSendApproval =
       "Dermanınızı göndermek istediğinize emin misiniz ?";
   static String dertValidator = "Derdinizi giriniz.";
@@ -85,6 +87,7 @@ abstract class DertText {
   static String dermanAddedSuccess = "Derman başarıyla eklendi!";
   static String dertAddedError = "Dert eklenirken bir hata oluştu.";
   static String dermanAddedError = "Derman eklenirken bir hata oluştu.";
+  static String shareMusicLink = "Linki Paylaş";
   static String profile = "PROFİL";
   static String followers = "TAKİPÇİ";
   static String follows = "TAKİP";
@@ -110,4 +113,5 @@ abstract class DertText {
   static String bip = 'BİP';
   static String dermanisApproved =
       'Dermanı onaylamak istediğinize emin misiniz?';
+  static String add = 'EKLE';
 }

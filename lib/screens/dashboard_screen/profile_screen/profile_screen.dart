@@ -1,9 +1,12 @@
 import 'package:dert/model/user_model.dart';
+import 'package:dert/screens/dashboard_screen/widgets/dashboard_input_text.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_button.dart';
 import 'package:dert/screens/screens.dart';
+import 'package:dert/services/fetch_youtube_info_service.dart';
 import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
+import 'package:dert/utils/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,9 +14,9 @@ import '../widgets/dashboard_circle_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool showScaffold;
-  final String userId;
+  final UserModel user;
   const ProfileScreen(
-      {super.key, this.showScaffold = false, required this.userId});
+      {super.key, this.showScaffold = false, required this.user});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -21,12 +24,33 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late Stream<UserModel?> userStream;
+  Map<String, String>? musicInfo;
 
   @override
   void initState() {
     super.initState();
     userStream = Provider.of<UserService>(context, listen: false)
-        .streamUserById(widget.userId);
+        .streamUserById(widget.user.uid);
+    _fetchMusicInfo();
+  }
+
+  Future<void> _fetchMusicInfo() async {
+    final youtubeInfoService =
+        Provider.of<YoutubeInfoService>(context, listen: false);
+    final info =
+        await youtubeInfoService.fetchYouTubeInfo(widget.user.musicUrl!);
+
+    setState(() {
+      musicInfo = info;
+    });
+  }
+
+  bool isValidYouTubeUrl(String url) {
+    final regex = RegExp(
+      r'^(https?:\/\/)?(www\.)?(youtube\.com\/(?:channel\/|user\/|playlist\/|watch\?v=|shorts\/)?|youtu\.be\/)[a-zA-Z0-9_-]{11}$',
+      caseSensitive: false,
+    );
+    return regex.hasMatch(url);
   }
 
   @override
@@ -151,8 +175,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               context,
               isMusic: true,
               header: DertText.selectedMusic,
-              content:
-                  "Müslüm Gürses - Yakarsa Dünyayı Garipler Yakar", // Burada kullanıcının müzik verisini kullanabilirsin
+              content: musicInfo != null
+                  ? "${musicInfo!['title']} - ${musicInfo!['artist']}"
+                  : "",
               logoPath: ImagePath.spotifyLogo,
             ),
             SizedBox(height: ScreenPadding.padding8px),
@@ -206,19 +231,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(width: ScreenPadding.padding8px),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(header, style: DertTextStyle.poppins.t12w700white),
-                Text(content, style: DertTextStyle.poppins.t10w500white),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(header, style: DertTextStyle.poppins.t12w700white),
+                  Text(
+                    content,
+                    style: DertTextStyle.poppins.t10w500white,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
             const Spacer(),
             if (isMusic) ...[
               InkWell(
                 onTap: () {
-                  // _showMyDialog(context);
+                  _showMyDialog(context, widget.user);
                 },
                 child: Container(
                   height: IconSize.size24px,
@@ -237,6 +269,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const Divider(color: Colors.white),
         ]
       ],
+    );
+  }
+
+  void _showMyDialog(BuildContext context, UserModel user) {
+    final TextEditingController urlController = TextEditingController();
+    bool isEditing = user.musicUrl != null && user.musicUrl!.isNotEmpty;
+
+    if (isEditing) {
+      urlController.text = user.musicUrl!;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                DertText.shareMusicLink,
+                style: DertTextStyle.roboto.t18w700darkpurple,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  width: IconSize.size24px,
+                  height: IconSize.size24px,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImagePath.closeLogo),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: DashboardInputText(
+            controller: urlController,
+            labelText: "YouTube URL",
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                final url = urlController.text;
+                if (url.isNotEmpty) {
+                  if (isValidYouTubeUrl(url)) {
+                    try {
+                      await Provider.of<UserService>(context, listen: false)
+                          .updateUserMusicUrl(user.uid, url);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      snackBar(context, 'Bir hata oluştu: $e');
+                    }
+                  } else {
+                    snackBar(context, "Geçerli bir YouTube URL'si girin.");
+                  }
+                }
+              },
+              child: Text(
+                DertText.add,
+                style: DertTextStyle.roboto.t12w700darkpurple,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

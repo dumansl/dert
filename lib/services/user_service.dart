@@ -72,6 +72,20 @@ class UserService extends ChangeNotifier {
     });
   }
 
+  Future<void> updateUserMusicUrl(String userId, String musicUrl) async {
+    return handleErrors(
+      operation: () async {
+        await _db.collection('users').doc(userId).update({
+          'musicUrl': musicUrl,
+        });
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Müzik URL'si güncellenirken hata oluştu: $e");
+      },
+    );
+  }
+
   Future<List<FollowModel>> getFollowers(String userId) async {
     return handleErrors(
       operation: () async {

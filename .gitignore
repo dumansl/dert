@@ -62,3 +62,5 @@ ios/**/Profile/*.mobileprovision
 firebase_options.dart
 
 /assets/
+
+/lib/services/fetch_youtube_info_service.dart

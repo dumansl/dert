@@ -1,6 +1,7 @@
 import 'package:dert/firebase_options.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/screens.dart';
+import 'package:dert/services/fetch_youtube_info_service.dart';
 import 'package:dert/services/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => DertService()),
         ChangeNotifierProvider(create: (_) => UserService()),
+        ChangeNotifierProvider(create: (_) => YoutubeInfoService()),
       ],
       child: const DertMobileApp(),
     ),

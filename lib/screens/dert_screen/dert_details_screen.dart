@@ -2,6 +2,7 @@ import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/derman_screen/widgets/derman_circle_avatar.dart';
+import 'package:dert/screens/dert_screen/widgets/custom_dert_dialog.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_answers_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_bips_button.dart';
 import 'package:dert/screens/dert_screen/widgets/dert_details_derman_card.dart';
@@ -25,7 +26,13 @@ class DertDetailsScreen extends StatelessWidget {
   }) async {
     try {
       await Provider.of<DertService>(context, listen: false)
-          .closeDertAndApproveDerman(dertId, dermanId, dertUserId);
+          .closeDertAndApproveDerman(
+        dertId,
+        dermanId,
+      );
+
+      await Provider.of<DertService>(context, listen: false)
+          .closeUserDertAndApproveDerman(dertId, dermanId, dertUserId);
 
       snackBar(context, "Derdinizi onayladınız.",
           bgColor: DertColor.state.success);
@@ -43,10 +50,32 @@ class DertDetailsScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _onDeleteDert(
+    BuildContext context, {
+    required String dertId,
+    required String userId,
+  }) async {
+    try {
+      await Provider.of<DertService>(context, listen: false)
+          .deleteDert(dertId, userId);
+
+      snackBar(context, "Dert başarıyla silindi.",
+          bgColor: DertColor.state.success);
+      Navigator.pop(context);
+    } catch (e) {
+      snackBar(
+        context,
+        "Bir hata oluştu: $e",
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userService = Provider.of<UserService>(context);
     final dertProvider = Provider.of<DertService>(context);
+
+    debugPrint(dert.dertId);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -77,14 +106,14 @@ class DertDetailsScreen extends StatelessWidget {
                         horizontal: ScreenPadding.padding16px,
                         vertical: ScreenPadding.padding32px,
                       ),
-                      child: _dertContent(dermans: dermans),
+                      child: _dertContent(context, dermans: dermans),
                     ),
                   ),
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      final derman = dermans[index]; // Burada derman çekiyoruz.
+                      final derman = dermans[index];
 
                       return StreamBuilder<UserModel?>(
                         stream: userService.streamUserById(derman.userId),
@@ -116,7 +145,8 @@ class DertDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _dertContent({required List<DermanModel> dermans}) {
+  Widget _dertContent(BuildContext context,
+      {required List<DermanModel> dermans}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,9 +167,21 @@ class DertDetailsScreen extends StatelessWidget {
               ],
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                DertDialogUtils.showMyDialog(
+                  context,
+                  DertText.dertDeleteApproval,
+                  () {
+                    _onDeleteDert(
+                      context,
+                      dertId: dert.dertId!,
+                      userId: dert.userId,
+                    );
+                  },
+                );
+              },
               icon: Icon(
-                Icons.more_horiz,
+                Icons.delete,
                 color: DertColor.icon.darkpurple,
                 size: IconSize.size30px,
               ),

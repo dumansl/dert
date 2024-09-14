@@ -8,6 +8,21 @@ import 'package:dert/services/handler_errors.dart';
 class DertService with ChangeNotifier {
   FirebaseFirestore get _db => FirebaseServiceProvider().firestore;
 
+  Stream<List<DertModel>> streamDerts(String userId) {
+    try {
+      return _db
+          .collection('users')
+          .doc(userId)
+          .collection('my_derts')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => DertModel.fromFirestore(doc))
+              .toList());
+    } catch (e) {
+      throw Exception("Dertleri akışa alma hatası: $e");
+    }
+  }
+
   Future<DertModel?> getDert(String dertId) async {
     return handleErrors(
       operation: () async {
@@ -26,42 +41,6 @@ class DertService with ChangeNotifier {
         throw Exception("Dert bilgilerini çekerken hata oluştu: $e");
       },
     );
-  }
-
-  Future<void> addDert(String userId, DertModel dert) async {
-    return handleErrors(
-      operation: () async {
-        String newDertId = _db.collection('derts').doc().id;
-
-        dert.dertId = newDertId;
-        await _db
-            .collection('users')
-            .doc(userId)
-            .collection('my_derts')
-            .doc(newDertId)
-            .set(dert.toMap());
-        await _db.collection('derts').doc(newDertId).set(dert.toMap());
-        notifyListeners();
-      },
-      onError: (e) {
-        throw Exception("Dert ekleme hatası: $e");
-      },
-    );
-  }
-
-  Stream<List<DertModel>> streamDerts(String userId) {
-    try {
-      return _db
-          .collection('users')
-          .doc(userId)
-          .collection('my_derts')
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => DertModel.fromFirestore(doc))
-              .toList());
-    } catch (e) {
-      throw Exception("Dertleri akışa alma hatası: $e");
-    }
   }
 
   Future<DertModel?> findRandomDert(String userId) async {
@@ -90,6 +69,58 @@ class DertService with ChangeNotifier {
     );
   }
 
+  Future<void> addDert(String userId, DertModel dert) async {
+    return handleErrors(
+      operation: () async {
+        String newDertId = _db.collection('derts').doc().id;
+
+        dert.dertId = newDertId;
+        await _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_derts')
+            .doc(newDertId)
+            .set(dert.toMap());
+        await _db.collection('derts').doc(newDertId).set(dert.toMap());
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Dert ekleme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> deleteDert(String dertId, String userId) async {
+    return handleErrors(
+      operation: () async {
+        DocumentReference dertRef = _db.collection('derts').doc(dertId);
+        DocumentReference userDertRef = _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_derts')
+            .doc(dertId);
+
+        await _db.runTransaction((transaction) async {
+          DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
+          DocumentSnapshot userDertSnapshot =
+              await transaction.get(userDertRef);
+
+          if (!dertSnapshot.exists || !userDertSnapshot.exists) {
+            throw Exception("Silinecek dert bulunamadı!");
+          }
+
+          transaction.delete(dertRef);
+          transaction.delete(userDertRef);
+        });
+
+        notifyListeners();
+      },
+      onError: (e) {
+        throw Exception("Dert silme hatası: $e");
+      },
+    );
+  }
+
   Future<List<DermanModel>> getDermansForDert(String dertId) async {
     return handleErrors(
       operation: () async {
@@ -113,17 +144,29 @@ class DertService with ChangeNotifier {
       String userId, DertModel dert, DermanModel derman) async {
     return handleErrors(
       operation: () async {
+        String dermanId = _db
+            .collection('derts')
+            .doc(dert.dertId)
+            .collection('dermans')
+            .doc()
+            .id;
+
+        derman.dermanId = dermanId;
+
         await _db
             .collection('derts')
             .doc(dert.dertId)
             .collection('dermans')
-            .add(derman.toMap());
-
+            .doc(dermanId)
+            .set(derman.toMap());
         await _db
             .collection('users')
-            .doc(userId)
-            .collection('my_dermans')
-            .add(derman.toMap());
+            .doc(dert.userId)
+            .collection('my_derts')
+            .doc(dert.dertId)
+            .collection('dermans')
+            .doc(dermanId)
+            .set(derman.toMap());
 
         notifyListeners();
       },
@@ -133,41 +176,10 @@ class DertService with ChangeNotifier {
     );
   }
 
-  Stream<List<DermanModel>> streamDerman(String dertId) {
-    return _db
-        .collection('derts')
-        .doc(dertId)
-        .collection('dermans')
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => DermanModel.fromFirestore(doc))
-            .toList());
-  }
-
-  Stream<List<DertModel>> getFollowedDerts(String userId) {
-    return _db
-        .collection('users')
-        .doc(userId)
-        .collection('follows')
-        .snapshots()
-        .asyncExpand((followedSnapshot) {
-      List<String> followedIds =
-          followedSnapshot.docs.map((doc) => doc.id).toList();
-
-      return _db
-          .collection('derts')
-          .where('userId', whereIn: followedIds)
-          .where('isClosed', isEqualTo: false)
-          .snapshots()
-          .map((querySnapshot) {
-        return querySnapshot.docs.map((doc) {
-          return DertModel.fromFirestore(doc);
-        }).toList();
-      });
-    });
-  }
-
-  Future<void> addBipToDert(String dertId, String userId) async {
+  Future<void> addBipToDert(
+    String dertId,
+    String userId,
+  ) async {
     return handleErrors(
       operation: () async {
         DocumentReference dertRef = _db.collection('derts').doc(dertId);
@@ -204,11 +216,81 @@ class DertService with ChangeNotifier {
     );
   }
 
-  Future<void> closeDertAndApproveDerman(
-      String dertId, String dermanId, String userId) async {
+  // Future<void> addReactionToDert(
+  //     {required String userId,
+  //     required DertModel dert,
+  //     DermanModel? derman,
+  //     required String reactionType}) async {
+  //   return handleErrors(
+  //     operation: () async {
+  //       DocumentReference userReactionRef = _db
+  //           .collection('users')
+  //           .doc(userId)
+  //           .collection('user_reactions')
+  //           .doc(dert.dertId);
+
+  //       DocumentSnapshot reactionSnapshot = await userReactionRef.get();
+
+  //       if (reactionSnapshot.exists) {
+  //         throw Exception("Bu derde zaten tepki verdiniz.");
+  //       }
+
+  //       await userReactionRef.set({
+  //         'reactionType': reactionType,
+  //         'timestamp': DateTime.now().millisecondsSinceEpoch,
+  //       });
+
+  //       if (reactionType == 'bip') {
+  //         await addBipToDert(dert.dertId!, userId);
+  //       } else if (reactionType == 'derman') {
+  //         await addDermanToDert(userId, dert, derman!);
+  //       }
+  //     },
+  //     onError: (e) {
+  //       throw Exception("Tepki ekleme hatası: $e");
+  //     },
+  //   );
+  // }
+
+  Stream<List<DermanModel>> streamDerman(String dertId) {
+    return _db
+        .collection('derts')
+        .doc(dertId)
+        .collection('dermans')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => DermanModel.fromFirestore(doc))
+            .toList());
+  }
+
+  Stream<List<DertModel>> getFollowedDerts(String userId) {
+    return _db
+        .collection('users')
+        .doc(userId)
+        .collection('follows')
+        .snapshots()
+        .asyncExpand((followedSnapshot) {
+      List<String> followedIds =
+          followedSnapshot.docs.map((doc) => doc.id).toList();
+
+      return _db
+          .collection('derts')
+          .where('userId', whereIn: followedIds)
+          .where('isClosed', isEqualTo: false)
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
+          return DertModel.fromFirestore(doc);
+        }).toList();
+      });
+    });
+  }
+
+  Future<void> closeDertAndApproveDerman(String dertId, String dermanId) async {
     return handleErrors(
       operation: () async {
         DocumentReference dertRef = _db.collection('derts').doc(dertId);
+
         DocumentReference dermanRef =
             dertRef.collection('dermans').doc(dermanId);
 
@@ -227,6 +309,40 @@ class DertService with ChangeNotifier {
         notifyListeners();
       },
       onError: (e) {
+        debugPrint("Error fetching dert data: $e");
+        throw Exception("Dert ve Derman güncelleme hatası: $e");
+      },
+    );
+  }
+
+  Future<void> closeUserDertAndApproveDerman(
+      String dertId, String dermanId, String userId) async {
+    return handleErrors(
+      operation: () async {
+        DocumentReference userDertRef =
+            _db.collection('users').doc(userId).collection('derts').doc(dertId);
+
+        DocumentReference userDermanRef =
+            userDertRef.collection('dermans').doc(dermanId);
+
+        await _db.runTransaction((transaction) async {
+          DocumentSnapshot userDertSnapshot =
+              await transaction.get(userDermanRef);
+          DocumentSnapshot userDermanSnapshot =
+              await transaction.get(userDermanRef);
+
+          if (!userDertSnapshot.exists || !userDermanSnapshot.exists) {
+            throw Exception("Dert veya derman bulunamadı!");
+          }
+
+          transaction.update(userDertRef, {'isClosed': true});
+          transaction.update(userDermanRef, {'isApproved': true});
+        });
+
+        notifyListeners();
+      },
+      onError: (e) {
+        debugPrint("Error fetching dert data: $e");
         throw Exception("Dert ve Derman güncelleme hatası: $e");
       },
     );

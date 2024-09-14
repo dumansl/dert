@@ -45,7 +45,7 @@ class DertModel {
 }
 
 class DermanModel {
-  final String? dermanId;
+  String? dermanId;
   final String userId;
   final String dertId;
   final String content;
