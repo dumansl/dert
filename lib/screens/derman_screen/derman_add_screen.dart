@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:dert/model/dert_model.dart';
 import 'package:dert/model/user_model.dart';
 import 'package:dert/screens/dashboard_screen/widgets/dashboard_bips_button.dart';
@@ -5,20 +8,21 @@ import 'package:dert/screens/dashboard_screen/widgets/dert_appbar.dart';
 import 'package:dert/screens/derman_screen/widgets/derman_dialog.dart';
 import 'package:dert/services/services.dart';
 import 'package:dert/utils/constant/constants.dart';
-import 'package:dert/utils/horizontal_page_route.dart';
 import 'package:dert/utils/snack_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'widgets/derman_circle_avatar.dart';
 import 'widgets/custom_derman_button.dart';
+import 'widgets/derman_circle_avatar.dart';
 import 'widgets/dermans_dert_card.dart';
 
 class DermanAddScreen extends StatefulWidget {
   final UserModel user;
   final DertModel dert;
 
-  const DermanAddScreen({super.key, required this.dert, required this.user});
+  const DermanAddScreen({
+    super.key,
+    required this.user,
+    required this.dert,
+  });
 
   @override
   State<DermanAddScreen> createState() => _DermanAddScreenState();
@@ -27,13 +31,21 @@ class DermanAddScreen extends StatefulWidget {
 class _DermanAddScreenState extends State<DermanAddScreen> {
   final formKey = GlobalKey<FormState>();
   String _derman = "";
+  late DertModel _currentDert;
+  int _dertKey = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentDert = widget.dert;
+  }
 
   void _submitForm() {
     if (!formKey.currentState!.validate()) return;
 
     formKey.currentState!.save();
     final derman = DermanModel(
-      dertId: widget.dert.dertId!,
+      dertId: _currentDert.dertId!,
       isApproved: false,
       content: _derman,
       timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -41,15 +53,17 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
     );
 
     Provider.of<DertService>(context, listen: false)
-        .addDermanToDert(widget.user.uid, widget.dert, derman)
-        .then((_) {
-      Navigator.of(context).pop();
+        .addDermanToDert(widget.user.uid, _currentDert, derman)
+        .then((_) async {
       snackBar(
         context,
         DertText.dermanAddedSuccess,
         bgColor: DertColor.state.success,
       );
       _resetForm();
+
+      await _loadNewRandomDert();
+      Navigator.pop(context);
     }).catchError((error) {
       debugPrint('Derman ekleme hatası: $error');
       snackBar(
@@ -69,16 +83,8 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
   Future<void> _onBipPressed() async {
     final dertService = Provider.of<DertService>(context, listen: false);
     try {
-      await dertService.addBipToDert(widget.dert.dertId!, widget.dert.userId);
-      final randomDert = await dertService.findRandomDert(widget.user.uid);
-      if (randomDert != null) {
-        Navigator.of(context).pushReplacement(createHorizontalPageRoute(
-          DermanAddScreen(
-            dert: randomDert,
-            user: widget.user,
-          ),
-        ));
-      }
+      await dertService.addBipToDert(_currentDert.dertId!, _currentDert.userId);
+      await _loadNewRandomDert();
     } catch (error) {
       debugPrint('Bip işlemi hatası: $error');
       snackBar(
@@ -90,19 +96,27 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
   }
 
   Future<void> _onMixPressed() async {
+    await _loadNewRandomDert();
+  }
+
+  Future<void> _loadNewRandomDert() async {
     final dertService = Provider.of<DertService>(context, listen: false);
     try {
       final randomDert = await dertService.findRandomDert(widget.user.uid);
       if (randomDert != null) {
-        Navigator.of(context).pushReplacement(createHorizontalPageRoute(
-          DermanAddScreen(
-            dert: randomDert,
-            user: widget.user,
-          ),
-        ));
+        setState(() {
+          _currentDert = randomDert; // Yeni dert geldiğinde değiştiriyoruz
+          _dertKey++; // AnimatedSwitcher için anahtarı değiştiriyoruz
+        });
+      } else {
+        snackBar(context, 'Başka dert bulunamadı.');
       }
     } catch (error) {
-      debugPrint('Karıştır işlemi hatası: $error');
+      debugPrint('Rastgele dert yükleme hatası: $error');
+      snackBar(
+        context,
+        'Yeni bir dert yüklenirken hata oluştu.',
+      );
     }
   }
 
@@ -122,12 +136,14 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  _dertContent(userService),
-                  _addDerman(context),
-                ],
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: _dertContent(userService),
               ),
+              _addDerman(context),
               _otherOptions(),
               SizedBox(height: ScreenPadding.padding8px),
             ],
@@ -139,10 +155,11 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
 
   Widget _dertContent(UserService userService) {
     return Row(
+      key: ValueKey(_dertKey), // Her dert değiştiğinde animasyon tetiklenir
       children: [
         Expanded(
           child: StreamBuilder<UserModel?>(
-            stream: userService.streamUserById(widget.dert.userId),
+            stream: userService.streamUserById(_currentDert.userId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -154,11 +171,11 @@ class _DermanAddScreenState extends State<DermanAddScreen> {
 
               final user = snapshot.data!;
               return DermansDertCard(
-                dert: widget.dert,
+                dert: _currentDert, // Yerel değişkeni kullanıyoruz
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    DashboardBipsButton(bips: widget.dert.bips),
+                    DashboardBipsButton(bips: _currentDert.bips),
                     Row(
                       children: [
                         Text(

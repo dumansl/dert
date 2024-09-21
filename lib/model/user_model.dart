@@ -31,6 +31,7 @@ class UserModel extends HiveObject {
   @HiveField(8)
   final String? musicUrl;
 
+  @HiveField(9)
   final int? points;
 
   UserModel({

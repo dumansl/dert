@@ -21,32 +21,22 @@ class DertDetailsScreen extends StatelessWidget {
   Future<void> _onCloseDert(
     BuildContext context, {
     required String dertId,
-    required String dermanId,
+    required DermanModel derman,
     required String dertUserId,
   }) async {
     try {
-      await Provider.of<DertService>(context, listen: false)
-          .closeDertAndApproveDerman(
-        dertId,
-        dermanId,
-      );
+      final dertProvider = Provider.of<DertService>(context, listen: false);
 
-      await Provider.of<DertService>(context, listen: false)
-          .closeUserDertAndApproveDerman(dertId, dermanId, dertUserId);
+      await dertProvider.closeDertAndApproveDermanForUser(
+          dertId, derman, dertUserId);
+
+      Navigator.pop(context);
 
       snackBar(context, "Derdinizi onayladınız.",
           bgColor: DertColor.state.success);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DashboardScreen(user: user),
-        ),
-      );
     } catch (e) {
-      snackBar(
-        context,
-        "Bir hata oluştu: $e",
-      );
+      debugPrint(e.toString());
+      snackBar(context, "Bir hata oluştu: $e");
     }
   }
 
@@ -56,12 +46,16 @@ class DertDetailsScreen extends StatelessWidget {
     required String userId,
   }) async {
     try {
-      await Provider.of<DertService>(context, listen: false)
-          .deleteDert(dertId, userId);
+      final dertProvider = Provider.of<DertService>(context, listen: false);
+      await dertProvider.deleteDert(dertId, userId);
 
       snackBar(context, "Dert başarıyla silindi.",
           bgColor: DertColor.state.success);
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardScreen(user: user)),
+        (route) => false,
+      );
     } catch (e) {
       snackBar(
         context,
@@ -130,7 +124,8 @@ class DertDetailsScreen extends StatelessWidget {
                           final dertUser = userSnapshot.data!;
                           return Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: ScreenPadding.padding16px),
+                                horizontal: ScreenPadding.padding16px,
+                                vertical: ScreenPadding.padding4px),
                             child: _dermanContent(context, derman, dertUser),
                           );
                         },
@@ -203,11 +198,17 @@ class DertDetailsScreen extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                _onCloseDert(
+                DertDialogUtils.showMyDialog(
                   context,
-                  dertId: dert.dertId!,
-                  dermanId: derman.dermanId!,
-                  dertUserId: dert.userId,
+                  DertText.dermanisApproved,
+                  () {
+                    _onCloseDert(
+                      context,
+                      dertId: dert.dertId!,
+                      derman: derman,
+                      dertUserId: dert.userId,
+                    );
+                  },
                 );
               },
               icon: Icon(

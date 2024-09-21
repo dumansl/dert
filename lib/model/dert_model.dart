@@ -85,6 +85,6 @@ class DermanModel {
 
   @override
   String toString() {
-    return 'DermanModel(content: $content, isApproved: $isApproved)';
+    return 'DermanModel(content: $content, isApproved: $isApproved,userId : $userId)';
   }
 }

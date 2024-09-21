@@ -71,6 +71,7 @@ class _RegisterContentState extends State<RegisterContent> {
         username: _username,
         gender: _gender,
         birthdate: _birthdate,
+        points: 0,
       );
 
       if (user != null) {

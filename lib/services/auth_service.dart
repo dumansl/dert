@@ -18,6 +18,7 @@ class AuthService extends ChangeNotifier {
     required String username,
     required String gender,
     required int birthdate,
+    required int points,
   }) async {
     return handleErrors(
       operation: () async {
@@ -28,6 +29,7 @@ class AuthService extends ChangeNotifier {
           "username": username,
           "gender": gender,
           "birthdate": birthdate,
+          "points": points,
         });
       },
       onError: (e) {
@@ -82,15 +84,15 @@ class AuthService extends ChangeNotifier {
     );
   }
 
-  Future<User?> createUserWithEmailAndPassword({
-    required String name,
-    required String lastName,
-    required String email,
-    required String password,
-    required String username,
-    required String gender,
-    required int birthdate,
-  }) async {
+  Future<User?> createUserWithEmailAndPassword(
+      {required String name,
+      required String lastName,
+      required String email,
+      required String password,
+      required String username,
+      required String gender,
+      required int birthdate,
+      required int points}) async {
     return handleErrors(
       operation: () async {
         UserCredential userCredential =
@@ -108,6 +110,7 @@ class AuthService extends ChangeNotifier {
             username: username,
             gender: gender,
             birthdate: birthdate,
+            points: points,
           );
         }
         notifyListeners();

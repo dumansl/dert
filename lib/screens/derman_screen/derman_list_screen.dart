@@ -134,7 +134,7 @@ class DermanListScreen extends StatelessWidget {
           width: ScreenUtil.getWidth(context) * 0.63,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(ImagePath.onboardImage3),
+              image: AssetImage(ImagePath.onboardImage),
             ),
           ),
         ),

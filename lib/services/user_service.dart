@@ -196,4 +196,22 @@ class UserService extends ChangeNotifier {
       },
     );
   }
+
+  Future<List<UserModel>> getUsersByPoints() async {
+    try {
+      QuerySnapshot snapshot = await _db
+          .collection('users')
+          .where('points', isGreaterThan: 0)
+          .orderBy('points', descending: true)
+          .get();
+
+      List<UserModel> users = snapshot.docs.map((doc) {
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+      }).toList();
+
+      return users;
+    } catch (e) {
+      throw Exception('Kullanıcı verileri alınırken hata oluştu: $e');
+    }
+  }
 }

@@ -216,42 +216,6 @@ class DertService with ChangeNotifier {
     );
   }
 
-  // Future<void> addReactionToDert(
-  //     {required String userId,
-  //     required DertModel dert,
-  //     DermanModel? derman,
-  //     required String reactionType}) async {
-  //   return handleErrors(
-  //     operation: () async {
-  //       DocumentReference userReactionRef = _db
-  //           .collection('users')
-  //           .doc(userId)
-  //           .collection('user_reactions')
-  //           .doc(dert.dertId);
-
-  //       DocumentSnapshot reactionSnapshot = await userReactionRef.get();
-
-  //       if (reactionSnapshot.exists) {
-  //         throw Exception("Bu derde zaten tepki verdiniz.");
-  //       }
-
-  //       await userReactionRef.set({
-  //         'reactionType': reactionType,
-  //         'timestamp': DateTime.now().millisecondsSinceEpoch,
-  //       });
-
-  //       if (reactionType == 'bip') {
-  //         await addBipToDert(dert.dertId!, userId);
-  //       } else if (reactionType == 'derman') {
-  //         await addDermanToDert(userId, dert, derman!);
-  //       }
-  //     },
-  //     onError: (e) {
-  //       throw Exception("Tepki ekleme hatası: $e");
-  //     },
-  //   );
-  // }
-
   Stream<List<DermanModel>> streamDerman(String dertId) {
     return _db
         .collection('derts')
@@ -286,57 +250,57 @@ class DertService with ChangeNotifier {
     });
   }
 
-  Future<void> closeDertAndApproveDerman(String dertId, String dermanId) async {
+  Future<void> closeDertAndApproveDermanForUser(
+      String dertId, DermanModel derman, String userId) async {
     return handleErrors(
       operation: () async {
         DocumentReference dertRef = _db.collection('derts').doc(dertId);
-
         DocumentReference dermanRef =
-            dertRef.collection('dermans').doc(dermanId);
+            dertRef.collection('dermans').doc(derman.dermanId);
+        DocumentReference userDertRef = _db
+            .collection('users')
+            .doc(userId)
+            .collection('my_derts')
+            .doc(dertId);
+        DocumentReference userDermanRef =
+            userDertRef.collection('dermans').doc(derman.dermanId);
+        DocumentReference userRef = _db.collection('users').doc(derman.userId);
 
         await _db.runTransaction((transaction) async {
           DocumentSnapshot dertSnapshot = await transaction.get(dertRef);
           DocumentSnapshot dermanSnapshot = await transaction.get(dermanRef);
+          DocumentSnapshot userDertSnapshot =
+              await transaction.get(userDertRef);
+          DocumentSnapshot userDermanSnapshot =
+              await transaction.get(userDermanRef);
+          DocumentSnapshot userSnapshot = await transaction.get(userRef);
 
-          if (!dertSnapshot.exists || !dermanSnapshot.exists) {
-            throw Exception("Dert veya derman bulunamadı!");
+          if (!dertSnapshot.exists) {
+            throw Exception("Dert bulunamadı: $dertId");
+          }
+          if (!dermanSnapshot.exists) {
+            throw Exception("Derman bulunamadı: ${derman.dermanId}");
+          }
+          if (!userDertSnapshot.exists) {
+            throw Exception("Kullanıcı Dert bulunamadı: $userId, $dertId");
+          }
+          if (!userDermanSnapshot.exists) {
+            throw Exception(
+                "Kullanıcı Derman bulunamadı: $userId, ${derman.dermanId}");
+          }
+          if (!userSnapshot.exists) {
+            throw Exception(
+                "Derman kullanıcısı bulunamadı: ${derman.userId}, ${derman.dermanId}");
           }
 
           transaction.update(dertRef, {'isClosed': true});
           transaction.update(dermanRef, {'isApproved': true});
-        });
-
-        notifyListeners();
-      },
-      onError: (e) {
-        debugPrint("Error fetching dert data: $e");
-        throw Exception("Dert ve Derman güncelleme hatası: $e");
-      },
-    );
-  }
-
-  Future<void> closeUserDertAndApproveDerman(
-      String dertId, String dermanId, String userId) async {
-    return handleErrors(
-      operation: () async {
-        DocumentReference userDertRef =
-            _db.collection('users').doc(userId).collection('derts').doc(dertId);
-
-        DocumentReference userDermanRef =
-            userDertRef.collection('dermans').doc(dermanId);
-
-        await _db.runTransaction((transaction) async {
-          DocumentSnapshot userDertSnapshot =
-              await transaction.get(userDermanRef);
-          DocumentSnapshot userDermanSnapshot =
-              await transaction.get(userDermanRef);
-
-          if (!userDertSnapshot.exists || !userDermanSnapshot.exists) {
-            throw Exception("Dert veya derman bulunamadı!");
-          }
-
           transaction.update(userDertRef, {'isClosed': true});
           transaction.update(userDermanRef, {'isApproved': true});
+
+          final int currentPoints = userSnapshot.get('points') ?? 0;
+
+          transaction.update(userRef, {'points': currentPoints + 10});
         });
 
         notifyListeners();
